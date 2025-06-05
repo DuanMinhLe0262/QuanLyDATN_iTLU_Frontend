@@ -15,7 +15,7 @@ const Login = () => {
     setLoading(true); // Bắt đầu loading
 
     try {
-      const response = await axios.post("http://localhost:8081/auth/token", {
+      const response = await axios.post("http://localhost:8080/auth/token", {
         email,
         password,
       });
@@ -24,10 +24,12 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("email", email);
 
-      navigate("/sinhvien");  // 👈 Chuyển trang đúng cách
+      console.log("Token nhận được:", token);
+
+      navigate("/sinhvien");
 
     } catch (error) {
-      alert("❌ Đăng nhập thất bại.");
+      alert("Đăng nhập thất bại.");
     } finally {
     setLoading(false); // Kết thúc loading
   }
