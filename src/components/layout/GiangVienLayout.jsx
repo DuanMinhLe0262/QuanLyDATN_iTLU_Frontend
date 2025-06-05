@@ -2,7 +2,7 @@ import { Outlet, NavLink } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const SinhVienLayout = () => {
+const GiangVienLayout = () => {
   const navItemClass = ({ isActive }) =>
     `block px-4 py-2 rounded transition ${
       isActive
@@ -18,28 +18,23 @@ const SinhVienLayout = () => {
         <aside className="w-64 p-6 border-r border-gray-300 bg-gray-50">
           <ul className="space-y-2">
             <li>
-              <NavLink to="/sinhvien" end className={navItemClass}>
+              <NavLink to="/giangvien" end className={navItemClass}>
                 Trang chủ
               </NavLink>
             </li>
             <li>
-              <NavLink to="/sinhvien/giangvienhd" className={navItemClass}>
-                Danh sách Giảng Viên hướng dẫn
+              <NavLink to="/giangvien/nhapdanhsach" className={navItemClass}>
+                Nhập DS Sinh viên hướng dẫn
               </NavLink>
             </li>
             <li>
-              <NavLink to="/sinhvien/detaigoiy" className={navItemClass}>
-                Danh sách đề tài gợi ý
+              <NavLink to="/giangvien/nhapdetai" className={navItemClass}>
+                Nhập DS Đề tài của sinh viên
               </NavLink>
             </li>
             <li>
-              <NavLink to="/sinhvien/decuong" className={navItemClass}>
-                Nộp đề cương
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/sinhvien/baocao" className={navItemClass}>
-                Nộp báo cáo
+              <NavLink to="/giangvien/quanlysinhvien" className={navItemClass}>
+                Quản lý sinh viên hướng dẫn
               </NavLink>
             </li>
           </ul>
@@ -55,4 +50,4 @@ const SinhVienLayout = () => {
   );
 };
 
-export default SinhVienLayout;
+export default GiangVienLayout;

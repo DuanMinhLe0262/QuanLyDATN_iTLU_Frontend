@@ -112,7 +112,7 @@ const DeCuong = () => {
         </div>
 
         <div>
-          <label className="block mb-1 font-medium">Chọn file (có thể chọn nhiều)</label>
+          <label className="block mb-1 font-medium">Chọn file</label>
           <label className="cursor-pointer bg-blue-100 text-blue-800 px-4 py-2 rounded hover:bg-blue-200 inline-block">
             Chọn file
             <input

@@ -4,29 +4,36 @@ const BaoCao = () => {
   const [formData, setFormData] = useState({
     tieuDe: "",
     loaiBaoCao: "",
-    file: null,
+    files: [],
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: files ? files[0] : value,
-    }));
+
+    if (name === "files") {
+      setFormData((prev) => ({
+        ...prev,
+        files: Array.from(files),
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Gửi dữ liệu về backend sau
-    console.log("Đã nộp báo cáo:", formData);
+    console.log("Dữ liệu nộp:", formData);
     setIsSubmitted(true);
   };
 
   return (
     <div className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Nộp Báo Cáo Tiến Độ</h2>
+      <h2 className="text-2xl font-bold mb-6">Nộp Báo Cáo</h2>
 
       {isSubmitted && (
         <div className="mb-4 p-4 bg-green-100 border border-green-300 text-green-800 rounded">
@@ -63,23 +70,33 @@ const BaoCao = () => {
           </select>
         </div>
 
-        <div>
-          <label className="block mb-1 font-medium">Tệp báo cáo (PDF)</label>
-          <input
-            type="file"
-            name="file"
-            accept=".pdf"
-            onChange={handleChange}
-            required
-            className="block"
-          />
+
+          <div>
+          <label className="block mb-1 font-medium">Chọn file</label>
+          <label className="cursor-pointer bg-blue-100 text-blue-800 px-4 py-2 rounded hover:bg-blue-200 inline-block">
+            Chọn file
+            <input
+              type="file"
+              name="files"
+              accept=".pdf"
+              multiple
+              onChange={handleChange}
+              required
+              className="hidden"
+            />
+          </label>
+          <ul className="mt-2 text-sm text-gray-700 list-disc list-inside">
+            {formData.files.map((file, idx) => (
+              <li key={idx}>{file.name}</li>
+            ))}
+          </ul>
         </div>
 
         <button
           type="submit"
           className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
         >
-          Nộp báo cáo
+        Nộp báo cáo
         </button>
       </form>
     </div>
