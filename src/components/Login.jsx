@@ -2,6 +2,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -11,8 +12,8 @@ const Login = () => {
   const [email, setEmail] = useState(localStorage.getItem("email") || "");
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Ngăn submit reload lại trang
-    setLoading(true); // Bắt đầu loading
+    e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await axios.post("http://localhost:8080/auth/token", {
@@ -24,16 +25,33 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("email", email);
 
-      console.log("Token nhận được:", token);
 
-      navigate("/sinhvien");
+
+      const decoded = jwtDecode(token);
+      const scopes = decoded.scope || "";
+
+      const roles = typeof scopes === "string" ? scopes.trim().split(/\s+/) : [];
+
+      console.log("Roles từ token:", roles);
+
+      if (roles.includes("STUDENT")) {
+        navigate("/sinhvien");
+        console.log("1")
+      } else if (roles.includes("LECTURE")) {
+        navigate("/giangvien");
+      } else if (roles.includes("DEPARTMENT")) {
+        navigate("/bomon");
+      } else {
+        alert("Không xác định được vai trò người dùng!");
+      }
 
     } catch (error) {
       alert("Đăng nhập thất bại.");
     } finally {
-    setLoading(false); // Kết thúc loading
-  }
+      setLoading(false);
+    }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 to-purple-600">
@@ -75,7 +93,8 @@ const Login = () => {
             </div>
 
             <button
-              type="submit disabled={loading}"
+              type="submit"
+              disabled={loading}
               className="mt-5 bg-gradient-to-br from-blue-400 to-purple-600 text-white py-2 rounded hover:opacity-90 transition"
             >
               {loading ? "Đang đăng nhập..." : "Đăng nhập"}

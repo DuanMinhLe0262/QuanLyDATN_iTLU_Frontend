@@ -22,6 +22,17 @@ const NhapDanhSachSinhVien = () => {
     <div className="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-md">
       <h2 className="text-xl font-bold mb-4">Nhập danh sách sinh viên hướng dẫn</h2>
 
+      {/* Nút tải xuống form mẫu */}
+      <div className="mb-4">
+        <a
+          href="/form-mau-sinhvien.xlsx"
+          download
+          className="text-blue-600 hover:underline text-sm inline-block bg-blue-50 border border-blue-200 px-3 py-2 rounded"
+        >
+          ⬇️ Tải xuống form mẫu Excel
+        </a>
+      </div>
+
       {success && (
         <div className="bg-green-100 border border-green-300 text-green-700 p-3 rounded mb-4">
           ✅ Tải file thành công!
