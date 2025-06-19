@@ -41,7 +41,9 @@ const Login = () => {
         navigate("/giangvien");
       } else if (roles.includes("DEPARTMENT")) {
         navigate("/bomon");
-      } else {
+      } else if (roles.includes("ADMIN")) {
+        navigate("/vanphongkhoa");
+      }else {
         alert("Không xác định được vai trò người dùng!");
       }
 

@@ -3,7 +3,7 @@ import { FaBell, FaEnvelope, FaUserCircle, FaCog } from "react-icons/fa";
 import logoDHTL from '../assets/logo_DHTL.png';
 import { Link } from "react-router-dom";
 
-const Navbar = () => {
+const Topbar = () => {
   return (
     <div className="flex justify-between items-center h-24 w-full px-4 mt-6 text-[#525252] border-b border-gray-300">
       <div className="flex items-center gap-2">
@@ -35,4 +35,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Topbar;
