@@ -16,38 +16,38 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:8080/auth/token", {
-        email,
-        password,
+      const response = await axios.post(
+        "http://localhost:8080/auth/token",
+        { email, password },
+        { withCredentials: true }
+      );
+
+
+      const infoRes = await axios.get("http://localhost:8080/auth/token/me", {
+        withCredentials: true,
       });
 
-      const token = response.data.result.token;
-      localStorage.setItem("token", token);
-      localStorage.setItem("email", email);
+      const roles = infoRes.data.roles || [];
+      localStorage.setItem("user", JSON.stringify({ roles }));
 
-
-
-      const decoded = jwtDecode(token);
-      const scopes = decoded.scope || "";
-
-      const roles = typeof scopes === "string" ? scopes.trim().split(/\s+/) : [];
-
-      console.log("Roles từ token:", roles);
+      console.log("Roles từ server:", roles);
+      console.log("Kiểu dữ liệu:", typeof roles, Array.isArray(roles));
 
       if (roles.includes("STUDENT")) {
         navigate("/sinhvien");
-        console.log("1")
       } else if (roles.includes("LECTURE")) {
         navigate("/giangvien");
       } else if (roles.includes("DEPARTMENT")) {
         navigate("/bomon");
       } else if (roles.includes("ADMIN")) {
+        console.log(" Văn phòng khoa");
         navigate("/vanphongkhoa");
-      }else {
+      } else {
         alert("Không xác định được vai trò người dùng!");
       }
 
     } catch (error) {
+      console.error("Login failed", error);
       alert("Đăng nhập thất bại.");
     } finally {
       setLoading(false);

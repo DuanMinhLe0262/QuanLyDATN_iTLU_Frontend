@@ -1,12 +1,11 @@
-import axios from 'axios';
-
-const BASE_URL = 'http://localhost:8080/giangvien';
+import axiosClient from "../utils/axiosClient";
+const BASE_PATH = '/giangvien';
 
 const giangVienService = {
-  getAllGiangVien: () => axios.get(BASE_URL),
-  createGiangVien: (data) => axios.post(BASE_URL, data),
-  updateGiangVien: (id, data) => axios.put(`${BASE_URL}/${id}`, data),
-  deleteGiangVien: (id) => axios.delete(`${BASE_URL}/${id}`)
-}
+  getAllGiangVien: () => axiosClient.get(BASE_PATH),
+  createGiangVien: (data) => axiosClient.post(BASE_PATH, data),
+  updateGiangVien: (id, data) => axiosClient.put(`${BASE_PATH}/${id}`, data),
+  deleteGiangVien: (id) => axiosClient.delete(`${BASE_PATH}/${id}`),
+};
 
 export default giangVienService;

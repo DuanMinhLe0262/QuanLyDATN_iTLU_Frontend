@@ -1,22 +1,51 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const PrivateRoute = ({ allowedRoles }) => {
-  const token = localStorage.getItem("token");
-  if (!token) return <Navigate to="/" />;
+  const [loading, setLoading] = useState(true);
+  const [isAllowed, setIsAllowed] = useState(false);
 
-  try {
-    const decoded = jwtDecode(token);
-    const scopes = decoded.scope || [];
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const res = await axios.get("http://localhost:8080/auth/token/me", {
+          withCredentials: true,
+        });
 
-    const roles = typeof scopes === "string" ? scopes.trim().split(/\s+/) : scopes;
+        const actualRoles = res.data.roles || [];
 
-    const hasRole = roles.some((role) => allowedRoles.includes(role));
+        // Cập nhật localStorage 
+        const cached = JSON.parse(localStorage.getItem("user"));
+        const cachedRoles = cached?.roles || [];
 
-    return hasRole ? <Outlet /> : <Navigate to="/" />;
-  } catch (err) {
-    return <Navigate to="/" />;
-  }
+        const rolesChanged =
+          JSON.stringify(actualRoles.sort()) !== JSON.stringify(cachedRoles.sort());
+
+        if (rolesChanged) {
+          localStorage.setItem("user", JSON.stringify({ roles: actualRoles }));
+          window.location.reload(); // Đồng bộ lại giao diện
+        }
+
+        const hasPermission = allowedRoles.some(role =>
+          actualRoles.includes(role)
+        );
+
+        setIsAllowed(hasPermission);
+      } catch (err) {
+        console.error("Không xác thực được người dùng", err);
+        setIsAllowed(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoles();
+  }, [allowedRoles]);
+
+  if (loading) return <div className="text-center p-4">Đang kiểm tra quyền truy cập...</div>;
+
+  return isAllowed ? <Outlet /> : <Navigate to="/" replace />;
 };
 
 export default PrivateRoute;

@@ -17,27 +17,28 @@ import QuanLyNganh from "../features/vanphongkhoa/pages/QuanLyNganh";
 import QuanLyLop from "../features/vanphongkhoa/pages/QuanLyLopHoc";
 
 
-
-
-
 const VanPhongKhoaRoutes = () => (
-  <Route >
-    <Route path="/vanphongkhoa" element={<VanPhongKhoaLayout />}>
-      <Route index element={<TrangChuVanPhongKhoa />} />
-      <Route path="quanly-dotdoan" element={<DotDoAn />} />
-      <Route path="quanlykhoa" element={<QuanLyKhoa />} />
-      <Route path="quanlybomon" element={<QuanLyBoMon />} />
-      <Route path="quanlynganh" element={<QuanLyNganh />} />
-      <Route path="quanlylop" element={<QuanLyLop />} />
-      <Route path="quanlysinhvien" element={<QuanLySinhVien />} />
+    <Route element={<PrivateRoute allowedRoles={["ADMIN"]} />}>
+      <Route path="/vanphongkhoa" element={<VanPhongKhoaLayout />}>
+        <Route index element={<TrangChuVanPhongKhoa />} />
 
-      <Route path="quanlygiangvien" element={<QuanLyGiangVien />} />
-      <Route path="quanly-sinhvien" element={<SinhVienDuDieuKien />} />
-      <Route path="laplich-baove" element={<LichBaoVe />} />
-      <Route path="duyet-hoidong" element={<DuyetHoiDong />} />
-      <Route path="thongke" element={<ThongKe />} />
+        <Route path="tochuc/khoa" element={<QuanLyKhoa />} />
+        <Route path="tochuc/bomon" element={<QuanLyBoMon />} />
+        <Route path="tochuc/nganh" element={<QuanLyNganh />} />
+        <Route path="tochuc/lop" element={<QuanLyLop />} />
+
+        <Route path="nguoidung/sinhvien" element={<QuanLySinhVien />} />
+        <Route path="nguoidung/giangvien" element={<QuanLyGiangVien />} />
+
+        <Route path="doan/dotdoan" element={<DotDoAn />} />
+        <Route path="doan/svddk" element={<SinhVienDuDieuKien />} />
+        <Route path="doan/lich" element={<LichBaoVe />} />
+        <Route path="doan/hodong" element={<DuyetHoiDong />} />
+
+        <Route path="thongke" element={<ThongKe />} />
+
+      </Route>
     </Route>
-  </Route>
 );
 
 export default VanPhongKhoaRoutes;

@@ -1,12 +1,11 @@
-import axios from 'axios';
+import axiosClient from "../utils/axiosClient";
+const BASE_PATH = '/sinhvien';
 
-const BASE_URL = 'http://localhost:8080/sinhvien';
+const sinhVienService = {
+  getAllSinhVien: () => axiosClient.get(BASE_PATH),
+  createSinhVien: (data) => axiosClient.post(BASE_PATH, data),
+  updateSinhVien: (id, data) => axiosClient.put(`${BASE_PATH}/${id}`, data),
+  deleteSinhVien: (id) => axiosClient.delete(`${BASE_PATH}/${id}`),
+};
 
-const sinhvienService = {
-  getAllSinhVien: () => axios.get(BASE_URL),
-  createSinhVien: (data) => axios.post(BASE_URL, data),
-  updateSinhVien: (id, data) => axios.put(`${BASE_URL}/${id}`, data),
-  deleteSinhVien: (id) => axios.delete(`${BASE_URL}/${id}`)
-}
-
-export default sinhvienService;
+export default sinhVienService;

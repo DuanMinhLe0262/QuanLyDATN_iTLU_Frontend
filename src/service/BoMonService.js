@@ -1,12 +1,11 @@
-import axios from 'axios';
-
-const BASE_URL = 'http://localhost:8080/bomon';
+import axiosClient from "../utils/axiosClient";
+const BASE_PATH = '/bomon';
 
 const boMonService = {
-  getAllBoMon: () => axios.get(BASE_URL),
-  createBoMon: (data) => axios.post(BASE_URL, data),
-  updateBoMon: (id, data) => axios.put(`${BASE_URL}/${id}`, data),
-  deleteBoMon: (id) => axios.delete(`${BASE_URL}/${id}`)
-}
+  getAllBoMon: () => axiosClient.get(BASE_PATH),
+  createBoMon: (data) => axiosClient.post(BASE_PATH, data),
+  updateBoMon: (id, data) => axiosClient.put(`${BASE_PATH}/${id}`, data),
+  deleteBoMon: (id) => axiosClient.delete(`${BASE_PATH}/${id}`),
+};
 
 export default boMonService;

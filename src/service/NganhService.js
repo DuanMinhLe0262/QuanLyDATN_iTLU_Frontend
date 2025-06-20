@@ -1,12 +1,11 @@
-import axios from 'axios';
-
-const BASE_URL = 'http://localhost:8080/nganh';
+import axiosClient from "../utils/axiosClient";
+const BASE_PATH = '/nganh';
 
 const nganhService = {
-  getAllNganh: () => axios.get(BASE_URL),
-  createNganh: (data) => axios.post(BASE_URL, data),
-  updateNganh: (id, data) => axios.put(`${BASE_URL}/${id}`, data),
-  deleteNganh: (id) => axios.delete(`${BASE_URL}/${id}`)
-}
+  getAllNganh: () => axiosClient.get(BASE_PATH),
+  createNganh: (data) => axiosClient.post(BASE_PATH, data),
+  updateNganh: (id, data) => axiosClient.put(`${BASE_PATH}/${id}`, data),
+  deleteNganh: (id) => axiosClient.delete(`${BASE_PATH}/${id}`),
+};
 
 export default nganhService;
