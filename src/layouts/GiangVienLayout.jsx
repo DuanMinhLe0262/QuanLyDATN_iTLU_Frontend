@@ -10,6 +10,7 @@ import { MdOutlineAssessment } from "react-icons/md";
 import logoDHTL from '../assets/logo_DHTL.png';
 
 import { useState } from "react";
+import UserDropdown from "../components/common/UserDropdown";
 
 const GiangVienLayout = () => {
   const [openGroup, setOpenGroup] = useState(null);
@@ -78,10 +79,7 @@ const GiangVienLayout = () => {
               <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full" />
             </button>
 
-            <button className="flex items-center gap-4">
-              <FaUserCircle className="w-6 h-6 text-gray-600 hover:text-gray-800" />
-              <span>Duan</span>
-            </button>
+            <UserDropdown/>
 
           </div>
 

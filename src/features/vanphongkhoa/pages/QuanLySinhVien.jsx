@@ -37,8 +37,13 @@ const QuanLySinhVien = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSinhVien((prev) => ({ ...prev, [name]: value }));
+    setSinhVien((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
   };
+
 
   const handleAddClick = () => {
     setSinhVien({
@@ -49,15 +54,16 @@ const QuanLySinhVien = () => {
       gioiTinh: "",
       diaChi: "",
       soDienThoai: "",
-      lop: "",
-      nganh: "",
-      khoa: ""
+      email: "",
+      avartarUrl: "",
+      lopId: ""
     });
     setIsEdit(false);
     setShowForm(true);
   };
 
   const handleEditClick = (sinhVien) => {
+    console.log("sinhvien: ", sinhVien);
     setSinhVien(sinhVien);
     setIsEdit(true);
     setShowForm(true);
@@ -75,6 +81,8 @@ const QuanLySinhVien = () => {
         await sinhVienService.updateSinhVien(sinhVien.id, sinhVien);
         setSuccessMessage("Cập nhật sinh viên thành công");
       } else {
+
+        console.log("data: ", sinhVien);
         await sinhVienService.createSinhVien(sinhVien);
         setSuccessMessage("Thêm sinh viên mới thành công");
       }

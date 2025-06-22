@@ -37,7 +37,10 @@ const QuanLyGiangVien = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setGiangVien((prev) => ({ ...prev, [name]: value }));
+    setGiangVien((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleAddClick = () => {
@@ -45,13 +48,15 @@ const QuanLyGiangVien = () => {
       maGiangVien: "",
       hoDem: "",
       ten: "",
-      ngaySinh: "",
+      email: "",
       gioiTinh: "",
-      diaChi: "",
+      ngaySinh: "",
       soDienThoai: "",
-      lop: "",
-      nganh: "",
-      khoa: ""
+      avartarUrl: "",
+      hocVi: "",
+      hocHam: "",
+      chucVu: "",
+      boMonId: ""
     });
     setIsEdit(false);
     setShowForm(true);
@@ -75,6 +80,7 @@ const QuanLyGiangVien = () => {
         await GiangVienService.updateGiangVien(giangVien.id, giangVien);
         setSuccessMessage("Cập nhật giảng viên thành công");
       } else {
+        console.log("data: ", giangVien);
         await GiangVienService.createGiangVien(giangVien);
         setSuccessMessage("Thêm giảng viên mới thành công");
       }

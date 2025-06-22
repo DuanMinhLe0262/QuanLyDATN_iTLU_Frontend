@@ -22,7 +22,7 @@ const DotDoAn = () => {
 
   const getAllDot = async () => {
     try {
-      const res = await dotDoAnService.getAllDot();
+      const res = await dotDoAnService.getAllDotDoAn();
       setDotList(res.data.result);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách:", err);
@@ -58,10 +58,10 @@ const DotDoAn = () => {
 
     try {
       if (isEdit) {
-        await dotDoAnService.updateDot(dot.id, dot);
+        await dotDoAnService.updateDotDoAn(dot.id, dot);
         setSuccessMessage("Cập nhật đợt thành công");
       } else {
-        await dotDoAnService.createDot(dot);
+        await dotDoAnService.createDotDoAn(dot);
         setSuccessMessage("Thêm đợt mới thành công");
       }
 

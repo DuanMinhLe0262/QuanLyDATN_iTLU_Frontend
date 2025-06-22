@@ -1,11 +1,11 @@
 import axiosClient from "../utils/axiosClient";
-const BASE_PATH = '/khoa';
+const BASE_PATH = '/lop';
 
-const khoaService = {
-  getAllKhoa: () => axiosClient.get(BASE_PATH),
-  createKhoa: (data) => axiosClient.post(BASE_PATH, data),
-  updateKhoa: (id, data) => axiosClient.put(`${BASE_PATH}/${id}`, data),
-  deleteKhoa: (id) => axiosClient.delete(`${BASE_PATH}/${id}`),
+const lopService = {
+  getAllLop: () => axiosClient.get(BASE_PATH),
+  createLop: (data) => axiosClient.post(BASE_PATH, data),
+  updateLop: (id, data) => axiosClient.put(`${BASE_PATH}/${id}`, data),
+  deleteLop: (id) => axiosClient.delete(`${BASE_PATH}/${id}`),
 };
 
-export default khoaService;
+export default lopService;

@@ -24,6 +24,8 @@ const QuanLyLop = () => {
     try {
       const res = await LopService.getAllLop();
       setLopList(res.data.result);
+      const data = res.data.result || [];
+      console.log("data: ", data);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách lớp:", err);
     }
@@ -45,7 +47,8 @@ const QuanLyLop = () => {
     setLop({
       tenLop: "",
       moTa: "",
-      boMonId: ""
+      khoaHoc: "",
+      nganhId: ""
     });
     setIsEdit(false);
     setShowForm(true);
@@ -53,6 +56,7 @@ const QuanLyLop = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+     console.log("🧾 Lưu lớp:", lop);
     try {
       if (isEdit) {
         await LopService.updateLop(lop.id, lop);
@@ -64,7 +68,7 @@ const QuanLyLop = () => {
 
       setShowForm(false);
       setLop(null);
-      fetchLopList();
+      await fetchLopList();
     } catch (err) {
       console.error("Lỗi khi lưu lớp:", err);
     }

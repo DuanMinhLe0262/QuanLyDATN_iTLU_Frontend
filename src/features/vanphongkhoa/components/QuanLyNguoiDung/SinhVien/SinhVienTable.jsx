@@ -10,7 +10,7 @@ const SinhVienTable = ({ sinhVienList, onEdit, onDelete }) => {
           <tr>
             <th className="py-3 px-4">#</th>
             <th className="py-3 px-4">Mã sinh viên</th>
-            <th className="py-3 px-4">Họ và tên đệm</th>
+            <th className="py-3 px-4">Họ đệm</th>
             <th className="py-3 px-4">Tên</th>
             <th className="py-3 px-4">Email</th>
             <th className="py-3 px-4">Lớp</th>
@@ -28,12 +28,12 @@ const SinhVienTable = ({ sinhVienList, onEdit, onDelete }) => {
             <tr key={row.id} className="hover:bg-gray-50">
               <td className="py-2 px-4">{index + 1}</td>
               <td className="py-2 px-4">{row.maSinhVien}</td>
-              <td className="py-2 px-4">{row.hoVaTenDem}</td>
+              <td className="py-2 px-4">{row.hoDem}</td>
               <td className="py-2 px-4">{row.ten}</td>
-              <td className="py-2 px-4">{row.email}</td>
-              <td className="py-2 px-4">{row.lop}</td>
-              <td className="py-2 px-4">{row.nganh}</td>
-              <td className="py-2 px-4">{row.khoa}</td>
+              <td className="py-2 px-4">{row?.user?.email}</td>
+              <td className="py-2 px-4">{row?.lop.tenLop}</td>
+              <td className="py-2 px-4">{row?.lop?.nganh?.tenNganh}</td>
+              <td className="py-2 px-4">{row?.lop?.nganh?.boMon?.khoa?.tenKhoa}</td>
               <td className="py-2 px-4">{row.soDienThoai}</td>
               <td className="py-2 px-4">{row.ngaySinh}</td>
               <td className="py-2 px-4">{row.gioiTinh}</td>

@@ -1,7 +1,7 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { useState } from "react";
 
-import { FaUserCircle, FaRegBell, FaUniversity, FaChalkboardTeacher, FaRegCalendarAlt } from "react-icons/fa";
+import { FaRegBell, FaUniversity, FaChalkboardTeacher, FaRegCalendarAlt } from "react-icons/fa";
 import { RiArrowDropDownLine } from "react-icons/ri";
 
 import { LuLayoutDashboard, LuBookOpen } from "react-icons/lu";
@@ -17,9 +17,11 @@ import { BiCalendarAlt } from "react-icons/bi";
 import { HiOutlineChartBar } from "react-icons/hi";
 
 import logoDHTL from '../assets/logo_DHTL.png';
+import UserDropdown from "../components/common/UserDropdown";
 
 const VanPhongKhoaLayout = () => {
   const [openGroup, setOpenGroup] = useState(null);
+  const [openUserDropdown, setOpenUserDropdown] = useState(null);
 
   const toggleGroup = (group) => {
     setOpenGroup(openGroup === group ? null : group);
@@ -83,7 +85,7 @@ const VanPhongKhoaLayout = () => {
                 <button onClick={() => toggleGroup("tochuc")}
                   className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
 
-                  <TbSitemap className="w-5 h-5"/>
+                  <TbSitemap className="w-5 h-5" />
 
                   <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
                     Quản lý tổ chức</span>
@@ -165,11 +167,11 @@ const VanPhongKhoaLayout = () => {
 
               <li>
                 <NavLink to="/vanphongkhoa/thongke" className={navItemClass}>
-                  <HiOutlineChartBar className="w-5 h-5"/>
+                  <HiOutlineChartBar className="w-5 h-5" />
                   <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Thống kê</span>
                 </NavLink>
               </li>
-              
+
             </ul>
           </div>
         </aside>
@@ -182,10 +184,7 @@ const VanPhongKhoaLayout = () => {
               <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full" />
             </button>
 
-            <button className="flex items-center gap-4">
-              <FaUserCircle className="w-6 h-6 text-gray-600 hover:text-gray-800" />
-              <span>Duan</span>
-            </button>
+            <UserDropdown/>
 
           </div>
 

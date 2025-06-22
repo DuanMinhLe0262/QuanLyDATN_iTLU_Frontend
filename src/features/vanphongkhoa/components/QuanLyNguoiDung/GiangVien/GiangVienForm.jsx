@@ -1,6 +1,22 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import boMonService from "../../../../../service/BoMonService";
 
 const GiangVienForm = ({ giangVien, onChange, onSubmit, onCancel, isEdit }) => {
+  const [danhSachBoMon, setDanhSachBoMon] = useState([]);
+
+  useEffect(() => {
+
+    fetchBoMon();
+  }, []);
+
+  const fetchBoMon = async () => {
+    try {
+      const res = await boMonService.getAllBoMon();
+      setDanhSachBoMon(res.data.result);
+    } catch (error) {
+      console.error("Lỗi lấy danh sách khoa:", error);
+    }
+  };
   if (!giangVien) return null;
 
   return (
@@ -47,7 +63,7 @@ const GiangVienForm = ({ giangVien, onChange, onSubmit, onCancel, isEdit }) => {
               htmlFor="hoDem"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
-              Họ và tên đệm
+              Họ đệm
             </label>
           </div>
 
@@ -70,7 +86,7 @@ const GiangVienForm = ({ giangVien, onChange, onSubmit, onCancel, isEdit }) => {
             </label>
           </div>
 
-          <div className="relative z-0 w-full mb-5 group">
+          <div className={`relative z-0 w-full mb-5 group ${isEdit ? 'hidden' : 'block'}`}>
             <input
               type="email"
               name="email"
@@ -89,62 +105,28 @@ const GiangVienForm = ({ giangVien, onChange, onSubmit, onCancel, isEdit }) => {
             </label>
           </div>
 
-          
           <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              name="nganh"
-              id="nganh"
-              value={giangVien.nganh}
-              onChange={onChange}
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
-            />
             <label
-              htmlFor="nganh"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              htmlFor="boMonId"
+              className="block mb-2 text-sm font-medium text-gray-500"
             >
-              Ngành
+              Chọn bộ môn
             </label>
-          </div>
-
-          <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              name="boMon"
-              id="boMon"
-              value={giangVien.boMon}
+            <select
+              id="boMonId"
+              name="boMonId"
+              value={giangVien.boMonId || ""}
               onChange={onChange}
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
               required
-            />
-            <label
-              htmlFor="boMon"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              className="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500  block w-full p-2.5"
             >
-              Bộ môn
-            </label>
-          </div>
-
-          <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              name="khoa"
-              id="khoa"
-              value={giangVien.khoa}
-              onChange={onChange}
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
-            />
-            <label
-              htmlFor="khoa"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Khoa
-            </label>
+              <option value="">----</option>
+              {danhSachBoMon.map((boMon) => (
+                <option key={boMon.id} value={boMon.id}>
+                  {boMon.tenBoMon}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="relative z-0 w-full mb-5 group">
@@ -263,7 +245,6 @@ const GiangVienForm = ({ giangVien, onChange, onSubmit, onCancel, isEdit }) => {
               Chức vụ
             </label>
           </div>
-
           
 
           <div className="flex flex-row mt-25 mb-10">

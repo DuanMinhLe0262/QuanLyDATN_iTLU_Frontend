@@ -45,7 +45,7 @@ const QuanLyNganh = () => {
     setNganh({
       tenNganh: "",
       moTa: "",
-      boMonId: "" // chọn bộ môn trực thuộc
+      boMonId: ""
     });
     setIsEdit(false);
     setShowForm(true);

@@ -1,6 +1,22 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import lopService from "../../../../../service/LopService";
 
 const SinhVienForm = ({ sinhVien, onChange, onSubmit, onCancel, isEdit }) => {
+  const [danhSachLop, setDanhSachLop] = useState([]);
+
+  useEffect(() => {
+
+    fetchLop();
+  }, []);
+
+  const fetchLop = async () => {
+    try {
+      const res = await lopService.getAllLop();
+      setDanhSachLop(res.data.result);
+    } catch (error) {
+      console.error("Lỗi lấy danh sách khoa:", error);
+    }
+  };
   if (!sinhVien) return null;
 
   return (
@@ -70,7 +86,7 @@ const SinhVienForm = ({ sinhVien, onChange, onSubmit, onCancel, isEdit }) => {
             </label>
           </div>
 
-          <div className="relative z-0 w-full mb-5 group">
+          <div className={`relative z-0 w-full mb-5 group ${isEdit ? 'hidden' : 'block'}`}>
             <input
               type="email"
               name="email"
@@ -86,61 +102,6 @@ const SinhVienForm = ({ sinhVien, onChange, onSubmit, onCancel, isEdit }) => {
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Email
-            </label>
-          </div>
-          <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              name="lop"
-              id="lop"
-              value={sinhVien.lop}
-              onChange={onChange}
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
-            />
-            <label
-              htmlFor="lop"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Lớp
-            </label>
-          </div>
-          <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              name="nganh"
-              id="nganh"
-              value={sinhVien.nganh}
-              onChange={onChange}
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
-            />
-            <label
-              htmlFor="nganh"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Ngành
-            </label>
-          </div>
-
-          <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              name="khoa"
-              id="khoa"
-              value={sinhVien.khoa}
-              onChange={onChange}
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
-            />
-            <label
-              htmlFor="khoa"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Khoa
             </label>
           </div>
 
@@ -223,12 +184,34 @@ const SinhVienForm = ({ sinhVien, onChange, onSubmit, onCancel, isEdit }) => {
             </label>
           </div>
 
-          
+          <div className="relative z-0 w-full mb-5 group">
+            <label
+              htmlFor="lopId"
+              className="block mb-2 text-sm font-medium text-gray-500"
+            >
+              Chọn lớp
+            </label>
+            <select
+              id="lopId"
+              name="lopId"
+              value={sinhVien.lopId || ""}
+              onChange={onChange}
+              required
+              className="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500  block w-full p-2.5"
+            >
+              <option value="">----</option>
+              {danhSachLop.map((lop) => (
+                <option key={lop.id} value={lop.id}>
+                  {lop.moTa}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <div className="flex flex-row mt-25 mb-10">
+          <div className="flex gap-4 mt-8">
             <button
               type="submit"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto  px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex-3 mr-15"
+              className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
             >
               {isEdit ? "Cập nhật" : "Thêm"}
             </button>
@@ -236,7 +219,7 @@ const SinhVienForm = ({ sinhVien, onChange, onSubmit, onCancel, isEdit }) => {
             <button
               type="button"
               onClick={() => onCancel(false)}
-              className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 flex-3"
+              className="text-white bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm px-5 py-2.5"
             >
               Hủy
             </button>

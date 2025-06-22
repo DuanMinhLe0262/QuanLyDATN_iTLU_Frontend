@@ -22,8 +22,8 @@ const NganhTable = ({ nganhList, onEdit, onDelete }) => {
               <td className="py-2 px-4">{index + 1}</td>
               <td className="py-2 px-4">{row.tenNganh}</td>
               <td className="py-2 px-4">{row.moTa}</td>
-              <td className="py-2 px-4">{row.tenBoMon}</td>
-              <td className="py-2 px-4">{row.tenKhoa}</td>
+              <td className="py-2 px-4">{row.boMon?.tenBoMon}</td>
+              <td className="py-2 px-4">{row.boMon?.khoa?.tenKhoa}</td>
               <td className="py-2 px-4 text-center space-x-2">
                 <button
                   className="text-yellow-600 hover:text-yellow-800"

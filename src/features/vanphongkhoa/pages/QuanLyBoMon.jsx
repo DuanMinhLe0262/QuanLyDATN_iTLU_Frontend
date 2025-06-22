@@ -23,11 +23,15 @@ const QuanLyBoMon = () => {
   const fetchBoMonList = async () => {
     try {
       const res = await BoMonService.getAllBoMon();
-      setBoMonList(res.data.result || []);
+      const data = res.data.result || [];
+
+      setBoMonList(data);
+      console.log("Data mới từ API:", data);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách bộ môn:", err);
     }
   };
+
 
   useEffect(() => {
     if (successMessage) {
@@ -36,15 +40,21 @@ const QuanLyBoMon = () => {
     }
   }, [successMessage]);
 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setBoMon((prev) => ({ ...prev, [name]: value }));
+
+    setBoMon((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleAddClick = () => {
     setBoMon({
       tenBoMon: "",
-      moTa: ""
+      moTa: "",
+      khoaId: ""
     });
     setIsEdit(false);
     setShowForm(true);
@@ -59,6 +69,7 @@ const QuanLyBoMon = () => {
         await BoMonService.updateBoMon(boMon.id, boMon);
         setSuccessMessage("Cập nhật bộ môn thành công");
       } else {
+        console.log("Dữ liệu gửi đi:", boMon);
         await BoMonService.createBoMon(boMon);
         setSuccessMessage("Thêm bộ môn mới thành công");
       }

@@ -1,90 +1,118 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const DuyetDeCuong = () => {
-  const [deCuongs, setDeCuongs] = useState([
-    {
-      id: 1,
-      tenSinhVien: "Nguyễn Văn A",
-      maSV: "SV001",
-      tenDeTai: "Xây dựng website quản lý đồ án",
-      moTa: "Ứng dụng React và Spring Boot để quản lý đồ án tốt nghiệp.",
-      trangThai: "Chờ duyệt",
-    },
-    {
-      id: 2,
-      tenSinhVien: "Trần Thị B",
-      maSV: "SV002",
-      tenDeTai: "Nghiên cứu AI trong phân loại văn bản",
-      moTa: "Áp dụng mô hình học sâu để phân loại văn bản tiếng Việt.",
-      trangThai: "Chờ duyệt",
-    },
-  ]);
-
+  const [deCuongs, setDeCuongs] = useState([]);
   const [tuChoiLyDo, setTuChoiLyDo] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const handleDuyet = (id) => {
-    setDeCuongs((prev) =>
-      prev.map((dc) =>
-        dc.id === id ? { ...dc, trangThai: "Đã duyệt" } : dc
-      )
-    );
+  const fetchDeCuongs = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/tailieu", {
+        withCredentials: true,
+      });
+      setDeCuongs(res.data.result);
+      console.log("dataa: ", deCuongs);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách đề cương:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
+  
+  useEffect(() => {
+    fetchDeCuongs();
+  }, []);
+
+
+  useEffect(() => {
+    console.log("data decuong sau khi fetch:", deCuongs);
+  }, [deCuongs]);
+
+  
+  const handleDuyet = async (id) => {
+    try {
+      await axios.put(
+        `http://localhost:8080/tailieu/${id}`,
+        {
+          trangThai: "DA_DUYET",
+        },
+        { withCredentials: true }
+      );
+      fetchDeCuongs();
+    } catch (error) {
+      console.error("Lỗi khi duyệt đề cương:", error);
+    }
   };
 
-  const handleTuChoi = (id) => {
+  const handleTuChoi = async (id) => {
     if (!tuChoiLyDo.trim()) {
       alert("Vui lòng nhập lý do từ chối.");
       return;
     }
-    setDeCuongs((prev) =>
-      prev.map((dc) =>
-        dc.id === id ? { ...dc, trangThai: `Từ chối: ${tuChoiLyDo}` } : dc
-      )
-    );
-    setTuChoiLyDo("");
+    try {
+      await axios.put(
+        `http://localhost:8080/tailieu/${id}`,
+        {
+          trangThai: "TU_CHOI",
+          nhanXet: tuChoiLyDo,
+        },
+        { withCredentials: true }
+      );
+      setTuChoiLyDo("");
+      fetchDeCuongs();
+    } catch (error) {
+      console.error("Lỗi khi từ chối đề cương:", error);
+    }
   };
 
   return (
     <div className="max-w-5xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Duyệt Đề Cương</h1>
 
-      {deCuongs.length === 0 ? (
+      {loading ? (
+        <p>Đang tải dữ liệu...</p>
+      ) : deCuongs.length === 0 ? (
         <p className="text-gray-600">Không có đề cương nào.</p>
       ) : (
+
         <div className="space-y-6">
           {deCuongs.map((dc) => (
             <div
               key={dc.id}
               className="border border-gray-200 rounded p-4 shadow-sm bg-white"
             >
-              <h2 className="text-lg font-semibold text-gray-800">
-                {dc.tenDeTai}
-              </h2>
+              <h2 className="text-lg font-semibold text-gray-800">{dc.tenDeTai}</h2>
               <p className="text-sm text-gray-600">
-                Sinh viên: <strong>{dc.tenSinhVien} ({dc.maSV})</strong>
+                Sinh viên:{" "}
+                <strong>
+                  {dc.sinhVien.hoDem} {dc.sinhVien.ten} ({dc.sinhVien.maSinhVien})
+                </strong>
               </p>
               <p className="text-sm text-gray-700 mt-2">Mô tả: {dc.moTa}</p>
               <p className="text-sm mt-2">
                 Trạng thái:{" "}
                 <span
-                  className={`font-medium ${
-                    dc.trangThai.includes("Từ chối")
+                  className={`font-medium ${dc.trangThai === "TU_CHOI"
                       ? "text-red-600"
-                      : dc.trangThai === "Đã duyệt"
-                      ? "text-green-600"
-                      : "text-yellow-600"
-                  }`}
+                      : dc.trangThai === "DA_DUYET"
+                        ? "text-blue-600"
+                        : "text-yellow-600"
+                    }`}
                 >
                   {dc.trangThai}
                 </span>
               </p>
 
-              {dc.trangThai === "Chờ duyệt" && (
+              {dc.trangThai === "CHO_DUYET" && (
                 <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-2">
                   <button
                     onClick={() => handleDuyet(dc.id)}
-                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                   >
-                    ✅ Duyệt
+                    Duyệt
                   </button>
 
                   <input
@@ -99,7 +127,7 @@ const DuyetDeCuong = () => {
                     onClick={() => handleTuChoi(dc.id)}
                     className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
                   >
-                    ❌ Từ chối
+                    Từ chối
                   </button>
                 </div>
               )}
