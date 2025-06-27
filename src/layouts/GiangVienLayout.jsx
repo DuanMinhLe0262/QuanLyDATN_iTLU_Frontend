@@ -1,11 +1,9 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { FaRegBell } from "react-icons/fa";
-import { FaUserCircle } from "react-icons/fa";
-import { FaRegLightbulb } from "react-icons/fa6";
+import { RiArrowDropDownLine } from "react-icons/ri";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { TbReport } from "react-icons/tb";
-import { MdOutlineAssessment } from "react-icons/md";
 
 import logoDHTL from '../assets/logo_DHTL.png';
 
@@ -14,14 +12,12 @@ import UserDropdown from "../components/common/UserDropdown";
 
 const GiangVienLayout = () => {
   const [openGroup, setOpenGroup] = useState(null);
-
   const toggleGroup = (group) => {
     setOpenGroup(openGroup === group ? null : group);
   };
 
   const navItemClass = ({ isActive }) =>
     `flex items-center p-2 rounded-lg transition ${isActive ? "bg-blue-100 font-semibold text-blue-700" : "text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"}`;
-
   return (
     <>
       <div>
@@ -47,10 +43,30 @@ const GiangVienLayout = () => {
               </li>
 
               <li>
-                <NavLink to="/giangvien/danhsachdetai" className={navItemClass}>
-                  <FaRegLightbulb className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Danh sách đề tài</span>
-                </NavLink>
+                <button onClick={() => toggleGroup("detai")}
+                  className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+
+                  <FaChalkboardTeacher className=" w-5 h-5" />
+
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
+                    Quản lý đề tài</span>
+
+                  <RiArrowDropDownLine className="w-8 h-8" />
+                </button>
+                <ul className={`${openGroup === "detai" ? "block" : "hidden"} py-2 space-y-2`}>
+                  <li>
+                    <NavLink to="/giangvien/duyetdetai" className={navItemClass}>
+                      <FaChalkboardTeacher className="ml-8 w-5 h-5" />
+                      <span className="ms-3 whitespace-nowrap">Duyệt đề tài</span>
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink to="/giangvien/danhsachdetai" className={navItemClass}>
+                      <FaChalkboardTeacher className="ml-8 w-5 h-5" /> <span className="ms-3 whitespace-nowrap">Danh sách đề tài</span>
+                    </NavLink>
+                  </li>
+                </ul>
               </li>
 
               <li>
@@ -61,9 +77,14 @@ const GiangVienLayout = () => {
               </li>
 
               <li>
-                <NavLink to="/giangvien/quanlysinhvien" className={navItemClass}>
-                  <TbReport className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Quản lý sinh viên</span>
+                <NavLink
+                  to="/giangvien/quanlysinhvienhuongdan"
+                  className={navItemClass}
+                >
+                  <TbReport className="w-5 h-5 mt-1 mr-3" />
+                  <span className="whitespace-normal break-words leading-snug text-left">
+                    Quản lý sinh viên hướng dẫn
+                  </span>
                 </NavLink>
               </li>
 
@@ -79,7 +100,7 @@ const GiangVienLayout = () => {
               <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full" />
             </button>
 
-            <UserDropdown/>
+            <UserDropdown />
 
           </div>
 

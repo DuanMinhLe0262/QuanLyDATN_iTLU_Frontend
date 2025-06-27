@@ -13,7 +13,6 @@ const NhapDanhSachSinhVien = () => {
     e.preventDefault();
     if (!file) return;
 
-    // Gửi file lên server ở đây
     console.log("File gửi:", file.name);
     setSuccess(true);
   };
@@ -35,7 +34,7 @@ const NhapDanhSachSinhVien = () => {
 
       {success && (
         <div className="bg-green-100 border border-green-300 text-green-700 p-3 rounded mb-4">
-          ✅ Tải file thành công!
+          Tải file thành công!
         </div>
       )}
 

@@ -54,6 +54,13 @@ const SinhVienLayout = () => {
               </li>
 
               <li>
+                <NavLink to="/sinhvien/dangkydetai" className={navItemClass}>
+                  <FaRegLightbulb className="w-5 h-5" />
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Đề tài của tôi</span>
+                </NavLink>
+              </li>
+
+              <li>
                 <NavLink to="/sinhvien/giangvienhd" className={navItemClass}>
                   <FaChalkboardTeacher className="w-5 h-5" />
                   <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Giảng viên hướng dẫn</span>

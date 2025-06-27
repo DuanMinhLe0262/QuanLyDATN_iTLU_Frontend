@@ -14,7 +14,7 @@ const DotDoAn = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const [dotIdCanXoa, setDotIdCanXoa] = useState(null);
+  const [deleteDot, setDeleteDot] = useState(null);
 
   useEffect(() => {
     getAllDot();
@@ -46,8 +46,7 @@ const DotDoAn = () => {
       tenDot: "",
       namHoc: "",
       thoiGianBatDau: "",
-      thoiGianKetThuc: "",
-      trangThaiDot: "DANG_DIEN_RA"
+      thoiGianKetThuc: ""
     });
     setIsEdit(false);
     setShowForm(true);
@@ -80,13 +79,13 @@ const DotDoAn = () => {
   };
 
   const handleDeleteClick = (id) => {
-    setDotIdCanXoa(id);
+    setDeleteDot(id);
     setShowConfirm(true);
   };
 
   const confirmDelete = async () => {
     try {
-      await dotDoAnService.deleteDot(dotIdCanXoa);
+      await dotDoAnService.deleteDotDoAn(deleteDot);
       setSuccessMessage("Xóa đợt thành công");
       getAllDot();
     } catch (err) {

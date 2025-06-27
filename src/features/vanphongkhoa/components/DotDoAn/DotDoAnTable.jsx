@@ -13,8 +13,6 @@ const DotDoAnTable = ({ dotList, onEdit, onDelete }) => {
             <th className="py-3 px-4">Năm học</th>
             <th className="py-3 px-4">Thời gian bắt đầu</th>
             <th className="py-3 px-4">Thời gian kết thúc</th>
-            <th className="py-3 px-4">Trạng thái</th>
-            <th className="py-3 px-4">Thời gian tạo</th>
             <th className="py-3 px-4 text-center">Hành động</th>
           </tr>
         </thead>
@@ -26,8 +24,6 @@ const DotDoAnTable = ({ dotList, onEdit, onDelete }) => {
               <td className="py-2 px-4">{row.namHoc}</td>
               <td className="py-2 px-4">{row.thoiGianBatDau}</td>
               <td className="py-2 px-4">{row.thoiGianKetThuc}</td>
-              <td className="py-2 px-4">{row.trangThaiDot}</td>
-              <td className="py-2 px-4">{row.thoiGianTao}</td>
               <td className="py-2 px-4 text-center space-x-2">
                 <button className="text-yellow-600 hover:text-yellow-800" onClick={() => onEdit(row)}>
                   <RiEditLine />

@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
 
-import SinhVienForm from "../components/QuanLyNguoiDung/SinhVien/SinhVienForm";
-import SinhVienTable from "../components/QuanLyNguoiDung/SinhVien/SinhVienTable";
+import FormChiTietDeTai from "../components/QuanLyDeTaiDoAn/FormChiTietDeTai";
+import SinhVienTable from "../components/QuanLyDeTaiDoAn/SinhVienTable";
 import ConfirmDialog from "../../../components/common/ConFirmDialog";
 import SuccessMessage from "../../../components/common/SuccessMessage";
-import sinhVienService from "../../../service/SinhVienService";
+import sinhVienHuongDanService from "../../../service/SinhVienHuongdanService";
 
-const QuanLySinhVien = () => {
+import UploadForm from "../components/QuanLySinhVienHuongDan/UploadForm";
+
+const DanhSachDeTai = () => {
   const [sinhVienList, setSinhVienList] = useState([]);
   const [sinhVien, setSinhVien] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [showUploadForm, setShowUploadForm] = useState(false);
+  const [showDetailForm, setShowDetailForm] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -21,7 +25,7 @@ const QuanLySinhVien = () => {
 
   const getAllSinhVien = async () => {
     try {
-      const res = await sinhVienService.getAllSinhVien();
+      const res = await sinhVienHuongDanService.getAllSinhVienHuongDan();
       setSinhVienList(res.data.result);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách sinh viên:", err);
@@ -48,26 +52,23 @@ const QuanLySinhVien = () => {
   const handleAddClick = () => {
     setSinhVien({
       maSinhVien: "",
-      hoDem: "",
-      ten: "",
-      ngaySinh: "",
-      gioiTinh: "",
-      diaChi: "",
-      soDienThoai: "",
-      email: "",
-      avartarUrl: "",
-      lopId: "",
-      dotId: ""
+      maGiangVien: "",
+      vaiTroHuongDan: ""
     });
     setIsEdit(false);
     setShowForm(true);
   };
 
   const handleEditClick = (sinhVien) => {
-    console.log("sinhvien: ", sinhVien);
     setSinhVien(sinhVien);
     setIsEdit(true);
     setShowForm(true);
+  };
+
+
+  const handleDetailClick = (sinhVien) => {
+    setSinhVien(sinhVien);
+    setShowDetailForm(true);
   };
 
   const handleDeleteClick = (id) => {
@@ -79,13 +80,13 @@ const QuanLySinhVien = () => {
     e.preventDefault();
     try {
       if (isEdit) {
-        await sinhVienService.updateSinhVien(sinhVien.id, sinhVien);
+        await sinhVienHuongDanService.updateSinhVienHuongDan(sinhVien.id, sinhVien);
         setSuccessMessage("Cập nhật sinh viên thành công");
       } else {
 
         console.log("data: ", sinhVien);
-        await sinhVienService.createSinhVien(sinhVien);
-        setSuccessMessage("Thêm sinh viên mới thành công");
+        await sinhVienHuongDanService.createSinhVienHuongDan(sinhVien);
+        setSuccessMessage("Thêm sinh viên hướng dẫn thành công");
       }
 
       setShowForm(false);
@@ -100,7 +101,7 @@ const QuanLySinhVien = () => {
 
   const confirmDelete = async () => {
     try {
-      await sinhVienService.deleteSinhVien(sinhVienIdCanXoa);
+      await sinhVienHuongDanService.deleteSinhVienHuongDan(sinhVienIdCanXoa);
       setSuccessMessage("Xóa sinh viên thành công");
       getAllSinhVien();
     } catch (err) {
@@ -113,23 +114,11 @@ const QuanLySinhVien = () => {
   return (
     <div className="relative overflow-x-auto p-4">
 
-      <div className="flex flex-row w-70 h-12 mb-10" >
-        <button
-          onClick={handleAddClick}
-          className="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm flex-1 mr-6 pl-5 pr-5" >
-          Thêm sinh viên
-        </button>
-
-        <button
-          className="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm flex-1">
-          Tải file
-        </button>
-      </div>
-
       {successMessage && <SuccessMessage message={successMessage} />}
 
+
       {showForm && (
-        <SinhVienForm
+        <FormChiTietDeTai
           sinhVien={sinhVien}
           onChange={handleChange}
           onSubmit={handleSubmit}
@@ -147,11 +136,13 @@ const QuanLySinhVien = () => {
 
       <SinhVienTable
         sinhVienList={sinhVienList}
+        onDetail={handleDetailClick}
         onEdit={handleEditClick}
+
         onDelete={handleDeleteClick}
       />
     </div>
   );
 };
 
-export default QuanLySinhVien;
+export default DanhSachDeTai;

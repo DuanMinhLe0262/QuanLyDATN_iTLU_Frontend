@@ -32,14 +32,13 @@ const Login = () => {
       console.log("Roles từ server:", roles);
       console.log("Kiểu dữ liệu:", typeof roles, Array.isArray(roles));
 
-      if (roles.includes("STUDENT")) {
+      if (roles.includes("SINHVIEN")) {
         navigate("/sinhvien");
-      } else if (roles.includes("LECTURE")) {
+      } else if (roles.includes("GIANGVIEN")) {
         navigate("/giangvien");
-      } else if (roles.includes("DEPARTMENT")) {
+      } else if (roles.includes("BOMON")) {
         navigate("/bomon");
-      } else if (roles.includes("ADMIN")) {
-        console.log(" Văn phòng khoa");
+      } else if (roles.includes("KHOA")) {
         navigate("/vanphongkhoa");
       } else {
         alert("Không xác định được vai trò người dùng!");
@@ -59,13 +58,15 @@ const Login = () => {
       <div className="w-full max-w-4xl bg-white shadow-lg rounded-2xl flex overflow-hidden">
         {/* Bên trái */}
         <div className="w-1/2 bg-gradient-to-br from-blue-400 to-purple-600 text-white flex flex-col justify-center items-center p-8">
-          <h2 className="text-3xl font-bold mb-4">Hello, welcome</h2>
-          <p className="text-center">We're glad you're here. Please login to continue.</p>
+          <h1 className="text-5xl font-bold mb-4">iTLU</h1>
+          <p className="text-center mb-20">
+            Hệ thống quản lý đồ án tốt nghiệp Trường Đại học Thủy Lợi
+          </p>
         </div>
 
         {/* Bên phải */}
         <div className="w-1/2 bg-white p-10">
-          <h2 className="text-2xl font-bold text-gray-700 mb-6">Login</h2>
+          <h2 className="text-2xl font-bold text-gray-700 mb-6">Đăng nhập</h2>
           <form className="flex flex-col space-y-4" onSubmit={handleLogin}>
             <input
               type="email"

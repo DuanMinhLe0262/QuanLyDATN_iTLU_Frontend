@@ -21,8 +21,6 @@ import UserDropdown from "../components/common/UserDropdown";
 
 const VanPhongKhoaLayout = () => {
   const [openGroup, setOpenGroup] = useState(null);
-  const [openUserDropdown, setOpenUserDropdown] = useState(null);
-
   const toggleGroup = (group) => {
     setOpenGroup(openGroup === group ? null : group);
   };

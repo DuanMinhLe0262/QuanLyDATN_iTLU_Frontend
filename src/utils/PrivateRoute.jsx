@@ -13,9 +13,13 @@ const PrivateRoute = ({ allowedRoles }) => {
           withCredentials: true,
         });
 
-        const actualRoles = res.data.roles || [];
+        const actualRoles = (res.data.roles || []).map(r => r.trim().toUpperCase());
+        const normalizedAllowedRoles = allowedRoles.map(r => r.trim().toUpperCase());
 
-        // Cập nhật localStorage 
+        const hasPermission = normalizedAllowedRoles.some(role =>
+          actualRoles.includes(role)
+        );
+
         const cached = JSON.parse(localStorage.getItem("user"));
         const cachedRoles = cached?.roles || [];
 
@@ -24,12 +28,7 @@ const PrivateRoute = ({ allowedRoles }) => {
 
         if (rolesChanged) {
           localStorage.setItem("user", JSON.stringify({ roles: actualRoles }));
-          window.location.reload(); // Đồng bộ lại giao diện
         }
-
-        const hasPermission = allowedRoles.some(role =>
-          actualRoles.includes(role)
-        );
 
         setIsAllowed(hasPermission);
       } catch (err) {

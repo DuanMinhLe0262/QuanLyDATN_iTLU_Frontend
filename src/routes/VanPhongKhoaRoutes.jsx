@@ -18,7 +18,7 @@ import QuanLyLop from "../features/vanphongkhoa/pages/QuanLyLopHoc";
 
 
 const VanPhongKhoaRoutes = () => (
-    <Route element={<PrivateRoute allowedRoles={["ADMIN"]} />}>
+    <Route element={<PrivateRoute allowedRoles={["KHOA"]} />}>
       <Route path="/vanphongkhoa" element={<VanPhongKhoaLayout />}>
         <Route index element={<TrangChuVanPhongKhoa />} />
 

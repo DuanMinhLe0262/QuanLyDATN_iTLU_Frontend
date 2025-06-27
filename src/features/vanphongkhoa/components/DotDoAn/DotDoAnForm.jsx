@@ -11,20 +11,23 @@ const DotDoAnForm = ({ dotDoAn, onChange, onSubmit, onCancel, isEdit }) => {
         <form className="max-w-md mx-auto" onSubmit={onSubmit}>
 
           <h1 className="font-bold text-3xl mb-15 mt-10">
-             {isEdit ? "Chỉnh sửa đợt" : "Thêm đợt mới"}
+            {isEdit ? "Chỉnh sửa đợt" : "Thêm đợt mới"}
           </h1>
 
           <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
+            <select
               name="tenDot"
               id="tenDot"
               value={dotDoAn.tenDot}
               onChange={onChange}
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:lue-500 focus:outline-none focus:ring-0 focus:lue-600 peer"
-              placeholder=" "
               required
-            />
+              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            >
+              <option value="">-- Chọn đợt --</option>
+              <option value="DOT_1">Đợt 1</option>
+              <option value="DOT_2">Đợt 2</option>
+            </select>
+
             <label
               htmlFor="tenDot"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -32,6 +35,7 @@ const DotDoAnForm = ({ dotDoAn, onChange, onSubmit, onCancel, isEdit }) => {
               Tên đợt
             </label>
           </div>
+
 
           {/* Năm học */}
           <div className="relative z-0 w-full mb-5 group">
@@ -50,7 +54,6 @@ const DotDoAnForm = ({ dotDoAn, onChange, onSubmit, onCancel, isEdit }) => {
               htmlFor="namHoc" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Năm học</label>
           </div>
 
-          {/* Thời gian bắt đầu & kết thúc */}
           <div className="grid md:grid-cols-2 md:gap-6">
             <div className="relative z-0 w-full mb-5 group">
               <input
@@ -78,9 +81,9 @@ const DotDoAnForm = ({ dotDoAn, onChange, onSubmit, onCancel, isEdit }) => {
               <label
                 htmlFor="thoiGianKetThuc" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Thời gian kết thúc</label>
             </div>
+            
           </div>
 
-          {/* Buttons */}
           <div className="flex flex-row mt-25">
             <button
               type="submit"

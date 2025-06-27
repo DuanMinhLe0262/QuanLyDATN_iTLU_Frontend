@@ -10,7 +10,7 @@ import QuanLyDeTaiGoiY from "../features/bomon/pages/QuanLyDeTaiGoiY";
 import QuanLyGiangVienGoiY from "../features/bomon/pages/QuanLyGiangVienGoiY";
 
 const BoMonRoutes = () => (
-      <Route element={<PrivateRoute allowedRoles={["DEPARTMENT"]} />}>
+      <Route element={<PrivateRoute allowedRoles={["BOMON"]} />}>
         <Route path="/bomon" element={<BoMonLayout />}>
           <Route index element={<TrangChuBoMon />} />
           <Route path="dexuathoidong" element={<DeXuatHoiDong />} />

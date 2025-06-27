@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
-import { IoAddOutline } from "react-icons/io5";
 
 import SinhVienForm from "../components/DanhSachSinhVien/SinhVienForm";
 import SinhVienTable from "../components/DanhSachSinhVien/SinhVienTable";
 import ConfirmDialog from "../../../components/common/ConFirmDialog";
 import SuccessMessage from "../../../components/common/SuccessMessage";
 import sinhVienService from "../../../service/SinhVienService";
+import UploadForm from "../../../components/common/UploadForm";
 
 const SinhVien = () => {
   const [sinhVienList, setSinhVienList] = useState([]);
+  const [showFormUpload, setShowFormUpload] = useState(false);
   const [sinhVien, setSinhVien] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -112,7 +113,7 @@ const SinhVien = () => {
           Thêm sinh viên
         </button>
 
-        <button
+        <button onClick={() => setShowFormUpload(true)}
           className="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm flex-1">
           Tải file
         </button>
@@ -130,8 +131,14 @@ const SinhVien = () => {
         />
       )}
 
+      {showFormUpload && (
+        <UploadForm
+        onCancel={() => setShowFormUpload(false)}
+        />
+      )}
+
       {showConfirm && (
-        <ConfirmDialog
+        <ConfirmDialog 
           onConfirm={confirmDelete}
           onCancel={() => setShowConfirm(false)}
         />

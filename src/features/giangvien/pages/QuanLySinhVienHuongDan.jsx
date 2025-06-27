@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 
-import SinhVienForm from "../components/QuanLyNguoiDung/SinhVien/SinhVienForm";
-import SinhVienTable from "../components/QuanLyNguoiDung/SinhVien/SinhVienTable";
+import SinhVienForm from "../components/QuanLySinhVienHuongDan/SinhVienForm";
+import SinhVienTable from "../components/QuanLySinhVienHuongDan/SinhVienTable";
 import ConfirmDialog from "../../../components/common/ConFirmDialog";
 import SuccessMessage from "../../../components/common/SuccessMessage";
-import sinhVienService from "../../../service/SinhVienService";
+import sinhVienHuongDanService from "../../../service/SinhVienHuongdanService";
+
+import UploadForm from "../components/QuanLySinhVienHuongDan/UploadForm";
 
 const QuanLySinhVien = () => {
   const [sinhVienList, setSinhVienList] = useState([]);
   const [sinhVien, setSinhVien] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [showUploadForm, setShowUploadForm] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -21,7 +24,7 @@ const QuanLySinhVien = () => {
 
   const getAllSinhVien = async () => {
     try {
-      const res = await sinhVienService.getAllSinhVien();
+      const res = await sinhVienHuongDanService.getAllSinhVienHuongDan();
       setSinhVienList(res.data.result);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách sinh viên:", err);
@@ -48,16 +51,8 @@ const QuanLySinhVien = () => {
   const handleAddClick = () => {
     setSinhVien({
       maSinhVien: "",
-      hoDem: "",
-      ten: "",
-      ngaySinh: "",
-      gioiTinh: "",
-      diaChi: "",
-      soDienThoai: "",
-      email: "",
-      avartarUrl: "",
-      lopId: "",
-      dotId: ""
+      maGiangVien: "",
+      vaiTroHuongDan: ""
     });
     setIsEdit(false);
     setShowForm(true);
@@ -79,13 +74,13 @@ const QuanLySinhVien = () => {
     e.preventDefault();
     try {
       if (isEdit) {
-        await sinhVienService.updateSinhVien(sinhVien.id, sinhVien);
+        await sinhVienHuongDanService.updateSinhVienHuongDan(sinhVien.id, sinhVien);
         setSuccessMessage("Cập nhật sinh viên thành công");
       } else {
 
         console.log("data: ", sinhVien);
-        await sinhVienService.createSinhVien(sinhVien);
-        setSuccessMessage("Thêm sinh viên mới thành công");
+        await sinhVienHuongDanService.createSinhVienHuongDan(sinhVien);
+        setSuccessMessage("Thêm sinh viên hướng dẫn thành công");
       }
 
       setShowForm(false);
@@ -100,7 +95,7 @@ const QuanLySinhVien = () => {
 
   const confirmDelete = async () => {
     try {
-      await sinhVienService.deleteSinhVien(sinhVienIdCanXoa);
+      await sinhVienHuongDanService.deleteSinhVienHuongDan(sinhVienIdCanXoa);
       setSuccessMessage("Xóa sinh viên thành công");
       getAllSinhVien();
     } catch (err) {
@@ -121,12 +116,19 @@ const QuanLySinhVien = () => {
         </button>
 
         <button
-          className="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm flex-1">
+          className="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm flex-1"
+          onClick={() => setShowUploadForm(true)}>
           Tải file
         </button>
       </div>
 
       {successMessage && <SuccessMessage message={successMessage} />}
+
+      {showUploadForm && (
+        <UploadForm
+          onCancel={() => setShowUploadForm(false)}
+        />
+      )}
 
       {showForm && (
         <SinhVienForm
