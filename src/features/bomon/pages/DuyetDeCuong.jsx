@@ -1,47 +1,33 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import taiLieuService from "../../../service/TaiLieuService";
+import fileUploadService from "../../../service/FileUploadService";
+import { GoDownload } from "react-icons/go";
 
 const DuyetDeCuong = () => {
   const [deCuongs, setDeCuongs] = useState([]);
   const [tuChoiLyDo, setTuChoiLyDo] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const fetchDeCuongs = async () => {
+  const fetchDeCuong = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/tailieu", {
-        withCredentials: true,
-      });
+      const res = await taiLieuService.getDeCuongChoDuyet();
       setDeCuongs(res.data.result);
-      console.log("dataa: ", deCuongs);
+      console.log("debug decuongchoduyet: ", res.data.result);
     } catch (error) {
       console.error("Lỗi khi lấy danh sách đề cương:", error);
     } finally {
       setLoading(false);
     }
   };
-  
 
-  
   useEffect(() => {
-    fetchDeCuongs();
+    fetchDeCuong();
   }, []);
 
-
-  useEffect(() => {
-    console.log("data decuong sau khi fetch:", deCuongs);
-  }, [deCuongs]);
-
-  
   const handleDuyet = async (id) => {
     try {
-      await axios.put(
-        `http://localhost:8080/tailieu/${id}`,
-        {
-          trangThai: "DA_DUYET",
-        },
-        { withCredentials: true }
-      );
-      fetchDeCuongs();
+      await taiLieuService.updateTrangThaiTaiLieu(id, { trangThai: "DA_DUYET" });
+      fetchDeCuong();
     } catch (error) {
       console.error("Lỗi khi duyệt đề cương:", error);
     }
@@ -53,18 +39,44 @@ const DuyetDeCuong = () => {
       return;
     }
     try {
-      await axios.put(
-        `http://localhost:8080/tailieu/${id}`,
-        {
-          trangThai: "TU_CHOI",
-          nhanXet: tuChoiLyDo,
-        },
-        { withCredentials: true }
-      );
+      await taiLieuService.updateTrangThaiTaiLieu(id, {
+        trangThai: "TU_CHOI",
+        danhGia: tuChoiLyDo,
+      });
       setTuChoiLyDo("");
-      fetchDeCuongs();
+      fetchDeCuong();
     } catch (error) {
       console.error("Lỗi khi từ chối đề cương:", error);
+    }
+  };
+
+  const handleDownloadClick = async (tenFile) => {
+    try {
+      const res = await fileUploadService.downLoadFile(tenFile);
+
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+
+      const link = document.createElement("a");
+      link.href = url;
+
+      const contentDisposition = res.headers["content-disposition"];
+      let fileName = tenFile;
+
+      if (contentDisposition) {
+        const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+        if (fileNameMatch.length > 1) {
+          fileName = fileNameMatch[1];
+        }
+      }
+
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Lỗi khi tải file:", error);
     }
   };
 
@@ -77,29 +89,40 @@ const DuyetDeCuong = () => {
       ) : deCuongs.length === 0 ? (
         <p className="text-gray-600">Không có đề cương nào.</p>
       ) : (
-
         <div className="space-y-6">
           {deCuongs.map((dc) => (
             <div
               key={dc.id}
               className="border border-gray-200 rounded p-4 shadow-sm bg-white"
             >
-              <h2 className="text-lg font-semibold text-gray-800">{dc.tenDeTai}</h2>
-              <p className="text-sm text-gray-600">
-                Sinh viên:{" "}
+              <h2 className="text-lg font-bold text-gray-800">
+                Tên đề tài: {dc?.deTai?.tenDeTai}
+              </h2>
+              <p className="text-sm text-gray-800">
                 <strong>
-                  {dc.sinhVien.hoDem} {dc.sinhVien.ten} ({dc.sinhVien.maSinhVien})
+                  {dc.deTai?.sinhVienDot?.sinhVien?.hoDem} {dc.deTai?.sinhVienDot?.sinhVien?.ten} ({dc.deTai?.sinhVienDot?.sinhVien?.maSinhVien})
                 </strong>
               </p>
-              <p className="text-sm text-gray-700 mt-2">Mô tả: {dc.moTa}</p>
+              <p className="text-sm text-gray-700 mt-2">Mô tả: {dc?.deTai?.moTa}</p>
+
+              <div className="flex mb-5">
+                <p className="text-sm text-gray-700 mt-2">File: <span className="text-red-600">{dc?.tenFile}</span>
+
+              </p>
+              <button
+                className="text-green-600 hover:text-green-800 ml-2 mt-1"
+                onClick={() => handleDownloadClick(dc?.tenFile)}>
+                <GoDownload className="w-6 h-6" /></button>
+              </div>
+
               <p className="text-sm mt-2">
                 Trạng thái:{" "}
                 <span
                   className={`font-medium ${dc.trangThai === "TU_CHOI"
-                      ? "text-red-600"
-                      : dc.trangThai === "DA_DUYET"
-                        ? "text-blue-600"
-                        : "text-yellow-600"
+                    ? "text-red-600"
+                    : dc.trangThai === "DA_DUYET"
+                      ? "text-blue-600"
+                      : "text-yellow-600"
                     }`}
                 >
                   {dc.trangThai}

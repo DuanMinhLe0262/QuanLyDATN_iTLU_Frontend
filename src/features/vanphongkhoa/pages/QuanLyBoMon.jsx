@@ -5,7 +5,7 @@ import BoMonForm from "../components/QuanLyToChuc/BoMon/BoMonForm";
 import BoMonTable from "../components/QuanLyToChuc/BoMon/BoMonTable";
 import ConfirmDialog from "../../../components/common/ConFirmDialog";
 import SuccessMessage from "../../../components/common/SuccessMessage";
-import BoMonService from "../../../service/BoMonSerVice";
+import BoMonService from "../../../service/BoMonService";
 
 const QuanLyBoMon = () => {
   const [boMonList, setBoMonList] = useState([]);

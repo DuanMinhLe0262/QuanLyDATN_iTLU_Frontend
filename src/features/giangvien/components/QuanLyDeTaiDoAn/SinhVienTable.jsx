@@ -1,9 +1,6 @@
-import React from "react";
-import { RiEditLine } from "react-icons/ri";
-import { HiOutlineTrash } from "react-icons/hi2";
 import { LuEye } from "react-icons/lu";
 
-const SinhVienTable = ({ sinhVienList, onDetail, onEdit, onDelete }) => {
+const SinhVienTable = ({ deTaiList, onDetail }) => {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table className="w-full text-sm text-left text-gray-500">
@@ -16,42 +13,25 @@ const SinhVienTable = ({ sinhVienList, onDetail, onEdit, onDelete }) => {
             <th className="py-3 px-4">Lớp</th>
             <th className="py-3 px-4">Số điện thoại</th>
             <th className="py-3 px-4">Tên đề tài</th>
-            <th className="py-3 px-4">GVHD 1</th>
-            <th className="py-3 px-4">GVHD 2</th>
             <th className="py-3 px-4 text-center">Hành động</th>
           </tr>
         </thead>
         <tbody>
-          {sinhVienList.map((row, index) => (
+          {deTaiList.map((row, index) => (
             <tr key={row.id} className="hover:bg-gray-50">
               <td className="py-2 px-4">{index + 1}</td>
-              <td className="py-2 px-4">{row?.sinhVien?.maSinhVien}</td>
-              <td className="py-2 px-4">{row.sinhVien?.hoDem}</td>
-              <td className="py-2 px-4">{row.sinhVien?.ten}</td>
-              <td className="py-2 px-4">{row?.sinhVien?.lop?.tenLop}</td>
-              <td className="py-2 px-4">{row.sinhVien?.soDienThoai}</td>
-              <td className="py-2 px-4">{row.tenDeTai}</td>
-              <td className="py-2 px-4"></td>
-              <td className="py-2 px-4"></td>
-              <td className="py-2 px-4 text-center space-x-2">
+              <td className="py-2 px-4">{row?.sinhVienDot?.sinhVien?.maSinhVien}</td>
+              <td className="py-2 px-4">{row?.sinhVienDot?.sinhVien?.hoDem}</td>
+              <td className="py-2 px-4">{row?.sinhVienDot?.sinhVien?.ten}</td>
+              <td className="py-2 px-4">{row?.sinhVienDot?.sinhVien?.lop?.tenLop}</td>
+              <td className="py-2 px-4">{row?.sinhVienDot?.sinhVien?.soDienThoai}</td>
+              <td className="py-2 px-4">{row?.tenDeTai}</td>
+              <td className="py-2 px-4 text-center">
                 <button
                   className="text-yellow-600 hover:text-yellow-800"
                   onClick={() => onDetail(row)}
                 >
                   <LuEye />
-                </button>
-
-                <button
-                  className="text-yellow-600 hover:text-yellow-800"
-                  onClick={() => onEdit(row)}
-                >
-                  <RiEditLine />
-                </button>
-                <button
-                  className="text-red-600 hover:text-red-800"
-                  onClick={() => onDelete(row.id)}
-                >
-                  <HiOutlineTrash />
                 </button>
               </td>
             </tr>

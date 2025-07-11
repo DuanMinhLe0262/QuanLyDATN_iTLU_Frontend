@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import deTaiService from "../../../service/DeTaiService";
 
 const DuyetDeTai = () => {
   const [deTais, setDeTais] = useState([]);
@@ -8,10 +8,9 @@ const DuyetDeTai = () => {
 
   const fetchDeTais = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/detai", {
-        withCredentials: true,
-      });
+      const res = await deTaiService.getDeTaiChoDuyet();
       setDeTais(res.data.result);
+      console.log("debug detaichoduyet: ", res.data.result);
     } catch (error) {
       console.error("Lỗi khi lấy danh sách đề tài:", error);
     } finally {
@@ -25,13 +24,7 @@ const DuyetDeTai = () => {
 
   const handleDuyet = async (id) => {
     try {
-      await axios.put(
-        `http://localhost:8080/detai/${id}`,
-        {
-          trangThai: "DA_DUYET",
-        },
-        { withCredentials: true }
-      );
+      await deTaiService.updateDeTaiByGiangVien(id, { trangThai: "DA_DUYET" });
       fetchDeTais();
     } catch (error) {
       console.error("Lỗi khi duyệt đề tài:", error);
@@ -44,14 +37,10 @@ const DuyetDeTai = () => {
       return;
     }
     try {
-      await axios.put(
-        `http://localhost:8080/detai/${id}`,
-        {
-          trangThai: "TU_CHOI",
-          lyDoTuChoi: tuChoiLyDo,
-        },
-        { withCredentials: true }
-      );
+      await deTaiService.updateDeTai(id, {
+        trangThai: "TU_CHOI",
+        danhGia: tuChoiLyDo,
+      });
       setTuChoiLyDo("");
       fetchDeTais();
     } catch (error) {
@@ -75,12 +64,12 @@ const DuyetDeTai = () => {
               className="border border-gray-200 rounded p-4 shadow-sm bg-white"
             >
               <h2 className="text-lg font-semibold text-gray-800">
-                {dt.tenDeTai}
+                Tên đề tài: {dt.tenDeTai}
               </h2>
               <p className="text-sm text-gray-600">
-                Sinh viên:{" "}
+                
                 <strong>
-                  {dt.sinhVien.hoDem} {dt.sinhVien.ten} ({dt.sinhVien.maSinhVien})
+                  {dt.sinhVienDot?.sinhVien?.hoDem} {dt.sinhVienDot?.sinhVien?.ten} ({dt.sinhVienDot?.sinhVien?.maSinhVien})
                 </strong>
               </p>
               <p className="text-sm text-gray-700 mt-2">Mô tả: {dt.moTa}</p>

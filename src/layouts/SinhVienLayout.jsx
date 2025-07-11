@@ -47,37 +47,23 @@ const SinhVienLayout = () => {
               </li>
 
               <li>
-                <NavLink to="/sinhvien/detaigoiy" className={navItemClass}>
+                <NavLink to="/sinhvien/detai" className={navItemClass}>
                   <FaRegLightbulb className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Đề tài gợi ý</span>
-                </NavLink>
-              </li>
-
-              <li>
-                <NavLink to="/sinhvien/dangkydetai" className={navItemClass}>
-                  <FaRegLightbulb className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Đề tài của tôi</span>
-                </NavLink>
-              </li>
-
-              <li>
-                <NavLink to="/sinhvien/giangvienhd" className={navItemClass}>
-                  <FaChalkboardTeacher className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Giảng viên hướng dẫn</span>
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Quản lý đề tài</span>
                 </NavLink>
               </li>
 
               <li>
                 <NavLink to="/sinhvien/decuong" className={navItemClass}>
                   <TbReport className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Đề cương</span>
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Quản lý đề cương</span>
                 </NavLink>
               </li>
 
               <li>
                 <NavLink to="/sinhvien/baocao" className={navItemClass}>
                   <MdOutlineAssessment className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Báo cáo</span>
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Quản lý báo cáo</span>
                 </NavLink>
               </li>
 
@@ -88,11 +74,6 @@ const SinhVienLayout = () => {
         <div className="p-4 sm:ml-64">
 
           <div className="flex justify-end items-center gap-4 px-4 py-2 mt-5 mb-5 bg-white ">
-            <button className="relative text-gray-600 hover:text-gray-800">
-              <FaRegBell className="w-6 h-6" />
-              <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full" />
-            </button>
-
             <UserDropdown/>
 
           </div>

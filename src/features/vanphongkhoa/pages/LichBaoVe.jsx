@@ -1,159 +1,170 @@
-import { useState } from "react";
-import { FaCalendarPlus, FaTrash } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { IoAddOutline } from "react-icons/io5";
+
+import LichBaoVeForm from "../components/QuanLyDotDoAn/LichBaoVe/LichBaoVeForm";
+import LichBaoVeTable from "../components/QuanLyDotDoAn/LichBaoVe/LichBaoVeTable";
+import ConfirmDialog from "../components/QuanLyDotDoAn/DotDoAn/ConFirmDialog";
+import SuccessMessage from "../../../components/common/SuccessMessage";
+import FailMessage from "../../../components/common/FailMessage";
+
+import hoiDongService from "../../../service/HoiDongService";
+import lichBaoVeService from "../../../service/LichBaoVeService";
 
 const LichBaoVe = () => {
-  const [dot, setDot] = useState("");
-  const [ngay, setNgay] = useState("");
-  const [gio, setGio] = useState("");
-  const [phong, setPhong] = useState("");
-  const [hoiDong, setHoiDong] = useState("");
-  const [lich, setLich] = useState([
-    {
-      id: 1,
-      dot: "Đợt 1 - HK2 2024",
-      ngay: "2024-06-20",
-      gio: "08:00",
-      phong: "P201",
-      hoiDong: "Hội đồng A",
-    },
-  ]);
+  const [lichList, setLichList] = useState([]);
+  const [lich, setLich] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [failMessage, setFailMessage] = useState("");
+  const [deleteId, setDeleteId] = useState(null);
+  const [hoiDongList, setHoiDongList] = useState([]);
 
-  const handleAddSchedule = () => {
-    if (!dot || !ngay || !gio || !phong || !hoiDong) return alert("Vui lòng nhập đầy đủ thông tin!");
+  useEffect(() => {
+    getAllLich();
+    fetchHoiDongList();
+  }, []);
 
-    const newSchedule = {
-      id: Date.now(),
-      dot,
-      ngay,
-      gio,
-      phong,
-      hoiDong,
-    };
-    setLich([...lich, newSchedule]);
-
-    // Reset form
-    setNgay(""); setGio(""); setPhong(""); setHoiDong("");
+  const getAllLich = async () => {
+    try {
+      const res = await lichBaoVeService.getAllLichBaoVe();
+      setLichList(res.data.result);
+      console.log("debug: ", res.data.result);
+    } catch (err) {
+      console.error("Lỗi khi lấy danh sách lịch:", err);
+      setFailMessage("Lỗi khi lấy danh sách lịch: " + (err.response?.data?.message || ""));
+    }
   };
 
-  const handleDelete = (id) => {
-    setLich(lich.filter((l) => l.id !== id));
+  const fetchHoiDongList = async () => {
+    try {
+      const res = await hoiDongService.getHoiDongDaDuyet();
+      setHoiDongList(res.data.result);
+    } catch (err) {
+      console.error("Lỗi khi lấy danh sách hội đồng:", err);
+      setFailMessage("Lỗi khi lấy danh sách hội đồng: " + (err.response?.data?.message || ""));
+    }
+  };
+
+  useEffect(() => {
+    if (successMessage) {
+      const timeout = setTimeout(() => setSuccessMessage(""), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [successMessage]);
+
+  useEffect(() => {
+    if (failMessage) {
+      const timeout = setTimeout(() => setFailMessage(""), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [failMessage]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setLich((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddClick = () => {
+    setLich({
+      hoiDongId: "",
+      diaDiem: "",
+      ngay: "",
+      gioBatDau: "",
+      gioKetThuc: "",
+    });
+    setIsEdit(false);
+    setShowForm(true);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (isEdit) {
+        await lichBaoVeService.updateLichBaoVe(lich.id, lich);
+        setSuccessMessage("Cập nhật lịch thành công");
+      } else {
+        await lichBaoVeService.createLichBaoVe(lich);
+        setSuccessMessage("Thêm lịch thành công");
+      }
+      setShowForm(false);
+      setLich(null);
+      getAllLich();
+    } catch (err) {
+      setShowForm(false);
+      console.error("Lỗi khi lưu lịch:", err);
+      setFailMessage("Lỗi khi lưu lịch: " + (err.response?.data?.message || ""));
+    }
+  };
+
+  const handleEditClick = (lichSelected) => {
+    setLich({
+      ...lichSelected,
+      hoiDongId: lichSelected.hoiDongId || "",
+      diaDiem: lichSelected.diaDiem || "",
+      ngay: lichSelected.ngay || "",
+      gioBatDau: lichSelected.gioBatDau || "",
+      gioKetThuc: lichSelected.gioKetThuc || "",
+    });
+    setIsEdit(true);
+    setShowForm(true);
+  };
+
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+    setShowConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await lichBaoVeService.deleteLichBaoVe(deleteId);
+      setSuccessMessage("Xóa lịch thành công");
+      getAllLich();
+    } catch (err) {
+      console.error("Lỗi khi xóa lịch:", err);
+      setFailMessage("Lỗi khi xóa lịch: " + (err.response?.data?.message || ""));
+    } finally {
+      setShowConfirm(false);
+    }
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Lập lịch bảo vệ</h2>
+    <div className="relative overflow-x-auto p-4">
+      <button
+        onClick={handleAddClick}
+        className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mb-10"
+      >
+        <IoAddOutline className="inline mr-2 mb-0.5 size-5" />
+        Thêm lịch
+      </button>
 
-      {/* Form tạo lịch */}
-      <div className="p-4 mb-6 border border-gray-300 rounded-lg bg-gray-50">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div>
-            <label className="block mb-1 font-medium text-sm">Chọn đợt đồ án</label>
-            <select
-              className="w-full border rounded px-3 py-2"
-              value={dot}
-              onChange={(e) => setDot(e.target.value)}
-            >
-              <option value="">-- Chọn đợt --</option>
-              <option value="Đợt 1 - HK2 2024">Đợt 1 - HK2 2024</option>
-              <option value="Đợt 2 - HK1 2025">Đợt 2 - HK1 2025</option>
-            </select>
-          </div>
+      {successMessage && <SuccessMessage message={successMessage} />}
+      {failMessage && <FailMessage message={failMessage} />}
 
-          <div>
-            <label className="block mb-1 font-medium text-sm">Ngày bảo vệ</label>
-            <input
-              type="date"
-              className="w-full border rounded px-3 py-2"
-              value={ngay}
-              onChange={(e) => setNgay(e.target.value)}
-            />
-          </div>
+      {showForm && (
+        <LichBaoVeForm
+          lich={lich}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          onCancel={() => setShowForm(false)}
+          isEdit={isEdit}
+          hoiDongList={hoiDongList}
+        />
+      )}
 
-          <div>
-            <label className="block mb-1 font-medium text-sm">Giờ bắt đầu</label>
-            <input
-              type="time"
-              className="w-full border rounded px-3 py-2"
-              value={gio}
-              onChange={(e) => setGio(e.target.value)}
-            />
-          </div>
+      {showConfirm && (
+        <ConfirmDialog
+          onConfirm={confirmDelete}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
 
-          <div>
-            <label className="block mb-1 font-medium text-sm">Phòng</label>
-            <input
-              type="text"
-              className="w-full border rounded px-3 py-2"
-              value={phong}
-              onChange={(e) => setPhong(e.target.value)}
-              placeholder="VD: P201"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-1 font-medium text-sm">Hội đồng</label>
-            <input
-              type="text"
-              className="w-full border rounded px-3 py-2"
-              value={hoiDong}
-              onChange={(e) => setHoiDong(e.target.value)}
-              placeholder="VD: Hội đồng A"
-            />
-          </div>
-        </div>
-
-        <button
-          onClick={handleAddSchedule}
-          className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition flex items-center"
-        >
-          <FaCalendarPlus className="mr-2" />
-          Thêm lịch
-        </button>
-      </div>
-
-      {/* Danh sách lịch đã tạo */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-200 bg-white shadow-sm rounded-lg">
-          <thead className="bg-gray-100 text-gray-700">
-            <tr>
-              <th className="py-3 px-4 text-left border-b">#</th>
-              <th className="py-3 px-4 text-left border-b">Đợt</th>
-              <th className="py-3 px-4 text-left border-b">Ngày</th>
-              <th className="py-3 px-4 text-left border-b">Giờ</th>
-              <th className="py-3 px-4 text-left border-b">Phòng</th>
-              <th className="py-3 px-4 text-left border-b">Hội đồng</th>
-              <th className="py-3 px-4 text-center border-b">Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {lich.map((item, index) => (
-              <tr key={item.id} className="hover:bg-gray-50">
-                <td className="py-2 px-4 border-b">{index + 1}</td>
-                <td className="py-2 px-4 border-b">{item.dot}</td>
-                <td className="py-2 px-4 border-b">{item.ngay}</td>
-                <td className="py-2 px-4 border-b">{item.gio}</td>
-                <td className="py-2 px-4 border-b">{item.phong}</td>
-                <td className="py-2 px-4 border-b">{item.hoiDong}</td>
-                <td className="py-2 px-4 border-b text-center">
-                  <button
-                    className="text-red-600 hover:text-red-800"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    <FaTrash />
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {lich.length === 0 && (
-              <tr>
-                <td colSpan="7" className="text-center py-6 text-gray-500">
-                  Chưa có lịch bảo vệ nào.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <LichBaoVeTable
+        lichList={lichList}
+        onEdit={handleEditClick}
+        onDelete={handleDeleteClick}
+      />
     </div>
   );
 };

@@ -9,18 +9,19 @@ const GiangVienTable = ({ giangVienList, onEdit, onDelete }) => {
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
             <th className="py-3 px-4">#</th>
-            <th className="py-3 px-4">Mã giảng viên</th>
-            <th className="py-3 px-4">Họ và tên đệm</th>
+            <th className="py-3 px-4">MGV</th>
+            <th className="py-3 px-4">Họ</th>
             <th className="py-3 px-4">Tên</th>
             <th className="py-3 px-4">Email</th>
-            <th className="py-3 px-4">Bộ môn</th>
+            <th className="py-3 px-4 text-nowrap">Bộ môn</th>
             <th className="py-3 px-4">Khoa</th>
-            <th className="py-3 px-4">Số điện thoại</th>
+            <th className="py-3 px-4">SĐT</th>
             <th className="py-3 px-4">Ngày sinh</th>
             <th className="py-3 px-4">Giới tính</th>
             <th className="py-3 px-4">Học vị</th>
             <th className="py-3 px-4">Học hàm</th>
             <th className="py-3 px-4">Chức vụ</th>
+            <th className="py-3 px-4">Quyền</th>
 
             <th className="py-3 px-4 text-center">Hành động</th>
           </tr>
@@ -41,6 +42,7 @@ const GiangVienTable = ({ giangVienList, onEdit, onDelete }) => {
               <td className="py-2 px-4">{row.hocVi}</td>
               <td className="py-2 px-4">{row.hocHam}</td>
               <td className="py-2 px-4">{row.chucVu}</td>
+              <td className="py-2 px-4">{row?.user?.roles}</td>
 
               <td className="py-2 px-4 text-center space-x-2">
                 <button

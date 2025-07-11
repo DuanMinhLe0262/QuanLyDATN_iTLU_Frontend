@@ -1,102 +1,140 @@
-import { useState } from "react";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import hoiDongService from "../../../service/HoiDongService";
 
 const DuyetHoiDong = () => {
-  const [hoiDongs, setHoiDongs] = useState([
-    {
-      id: 1,
-      tenHoiDong: "Hội đồng A",
-      dot: "Đợt 1 - HK2 2024",
-      thanhVien: ["GV Nguyễn Văn A", "GV Trần Thị B", "GV Lê Văn C"],
-      trangThai: "chờ duyệt",
-    },
-    {
-      id: 2,
-      tenHoiDong: "Hội đồng B",
-      dot: "Đợt 1 - HK2 2024",
-      thanhVien: ["GV Nguyễn Thị D", "GV Phạm Văn E"],
-      trangThai: "chờ duyệt",
-    },
-  ]);
+  const [hoiDongs, setHoiDongs] = useState([]);
+  const [tuChoiLyDos, setTuChoiLyDos] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  const handleApprove = (id) => {
-    setHoiDongs(
-      hoiDongs.map((hd) =>
-        hd.id === id ? { ...hd, trangThai: "đã duyệt" } : hd
-      )
-    );
+  const fetchHoiDong = async () => {
+    try {
+      const res = await hoiDongService.getHoiDongChoDuyet();
+      setHoiDongs(res.data.result);
+      console.log("debug hoi dong: ", res.data.result);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách hội đồng:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleReject = (id) => {
-    setHoiDongs(
-      hoiDongs.map((hd) =>
-        hd.id === id ? { ...hd, trangThai: "từ chối" } : hd
-      )
-    );
+  useEffect(() => {
+    fetchHoiDong();
+  }, []);
+
+  const handleDuyet = async (id) => {
+    try {
+      await hoiDongService.updateTrangThaiHoiDong(id, { trangThai: "DA_DUYET" });
+      setTuChoiLyDos({ ...tuChoiLyDos, [id]: "" }); // reset lý do từ chối của hội đồng đó
+      fetchHoiDong();
+    } catch (error) {
+      console.error("Lỗi khi duyệt hội đồng:", error);
+    }
+  };
+
+  const handleTuChoi = async (id) => {
+    const lyDo = tuChoiLyDos[id];
+    if (!lyDo || !lyDo.trim()) {
+      alert("Vui lòng nhập lý do từ chối.");
+      return;
+    }
+    try {
+      await hoiDongService.updateTrangThaiHoiDong(id, {
+        trangThai: "TU_CHOI",
+        danhGia: lyDo,
+      });
+      setTuChoiLyDos({ ...tuChoiLyDos, [id]: "" });
+      fetchHoiDong();
+    } catch (error) {
+      console.error("Lỗi khi từ chối hội đồng:", error);
+    }
+  };
+
+  // Hàm sắp xếp vai trò
+  const sortGiangVien = (list) => {
+    const vaiTroOrder = {
+      CHU_TICH: 1,
+      THU_KY: 2,
+      UY_VIEN_1: 3,
+      UY_VIEN_2: 4,
+      UY_VIEN_3: 5,
+    };
+    return list.slice().sort((a, b) => {
+      const orderA = vaiTroOrder[a.vaiTro] || 99;
+      const orderB = vaiTroOrder[b.vaiTro] || 99;
+      return orderA - orderB;
+    });
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Duyệt hội đồng</h2>
+    <div className="max-w-5xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Duyệt Hội Đồng</h1>
 
-      <div className="grid gap-4">
-        {hoiDongs.map((hd) => (
-          <div
-            key={hd.id}
-            className="border border-gray-300 p-4 rounded-lg bg-white shadow-sm"
-          >
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
-              <div>
-                <h3 className="text-lg font-medium text-gray-800">{hd.tenHoiDong}</h3>
-                <p className="text-sm text-gray-500">Đợt: {hd.dot}</p>
-              </div>
+      {loading ? (
+        <p>Đang tải dữ liệu...</p>
+      ) : hoiDongs.length === 0 ? (
+        <p className="text-gray-600">Không có hội đồng nào đang chờ duyệt.</p>
+      ) : (
+        <div className="space-y-6">
+          {hoiDongs.map((hd) => {
+            const danhSachGVSorted = sortGiangVien(hd.danhSachGiangVien || []);
+
+            return (
               <div
-                className={`text-sm mt-2 md:mt-0 font-semibold ${
-                  hd.trangThai === "đã duyệt"
-                    ? "text-green-600"
-                    : hd.trangThai === "từ chối"
-                    ? "text-red-600"
-                    : "text-yellow-600"
-                }`}
+                key={hd.id}
+                className="border border-gray-200 rounded p-4 shadow-sm bg-white"
               >
-                Trạng thái: {hd.trangThai}
+                <h2 className="text-lg font-bold text-gray-800">
+                  Tên hội đồng: {hd.tenHoiDong}
+                </h2>
+
+                <p className="text-sm text-gray-700 mt-2">
+                  Trạng thái: <strong className="text-red-500">{hd.trangThai}</strong>
+                </p>
+
+                <div className="mt-3">
+                  <h3 className="text-sm font-semibold mb-1">
+                    Danh sách giảng viên:
+                  </h3>
+                  <ul className="list-disc pl-5 text-gray-700">
+                    {danhSachGVSorted.map((gv, idx) => (
+                      <li key={idx}>
+                        {gv.giangVien?.maGiangVien} - {gv.giangVien?.hoDem} {gv.giangVien?.ten} ({gv.vaiTro})
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-2">
+                  <button
+                    onClick={() => handleDuyet(hd.id)}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                  >
+                    Duyệt
+                  </button>
+
+                  <input
+                    type="text"
+                    placeholder="Lý do từ chối"
+                    value={tuChoiLyDos[hd.id] || ""}
+                    onChange={(e) =>
+                      setTuChoiLyDos({ ...tuChoiLyDos, [hd.id]: e.target.value })
+                    }
+                    className="flex-1 border border-gray-300 rounded px-3 py-2"
+                  />
+
+                  <button
+                    onClick={() => handleTuChoi(hd.id)}
+                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                  >
+                    Từ chối
+                  </button>
+                </div>
               </div>
-            </div>
-
-            <div className="mb-3">
-              <p className="font-medium text-sm mb-1">Thành viên:</p>
-              <ul className="list-disc list-inside text-gray-700 text-sm">
-                {hd.thanhVien.map((gv, index) => (
-                  <li key={index}>{gv}</li>
-                ))}
-              </ul>
-            </div>
-
-            {hd.trangThai === "chờ duyệt" && (
-              <div className="flex gap-4">
-                <button
-                  onClick={() => handleApprove(hd.id)}
-                  className="flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-                >
-                  <FaCheckCircle className="mr-2" />
-                  Duyệt
-                </button>
-                <button
-                  onClick={() => handleReject(hd.id)}
-                  className="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-                >
-                  <FaTimesCircle className="mr-2" />
-                  Từ chối
-                </button>
-              </div>
-            )}
-          </div>
-        ))}
-
-        {hoiDongs.length === 0 && (
-          <p className="text-center text-gray-500">Không có hội đồng nào.</p>
-        )}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

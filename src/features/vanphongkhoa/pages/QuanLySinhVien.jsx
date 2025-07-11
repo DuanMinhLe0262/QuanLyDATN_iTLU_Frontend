@@ -57,7 +57,6 @@ const QuanLySinhVien = () => {
       email: "",
       avartarUrl: "",
       lopId: "",
-      dotId: ""
     });
     setIsEdit(false);
     setShowForm(true);

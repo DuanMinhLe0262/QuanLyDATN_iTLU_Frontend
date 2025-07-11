@@ -70,10 +70,30 @@ const GiangVienLayout = () => {
               </li>
 
               <li>
-                <NavLink to="/giangvien/danhsachsinhvien" className={navItemClass}>
-                  <FaChalkboardTeacher className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Danh sách sinh viên</span>
-                </NavLink>
+                <button onClick={() => toggleGroup("baocao")}
+                  className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+
+                  <FaChalkboardTeacher className=" w-5 h-5" />
+
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
+                    Quản lý báo cáo</span>
+
+                  <RiArrowDropDownLine className="w-8 h-8" />
+                </button>
+                <ul className={`${openGroup === "baocao" ? "block" : "hidden"} py-2 space-y-2`}>
+                  <li>
+                    <NavLink to="/giangvien/duyetbaocao" className={navItemClass}>
+                      <FaChalkboardTeacher className="ml-8 w-5 h-5" />
+                      <span className="ms-3 whitespace-nowrap">Duyệt báo cáo</span>
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink to="/giangvien/danhsachbaocao" className={navItemClass}>
+                      <FaChalkboardTeacher className="ml-8 w-5 h-5" /> <span className="ms-3 whitespace-nowrap">Danh sách báo cáo</span>
+                    </NavLink>
+                  </li>
+                </ul>
               </li>
 
               <li>
@@ -95,10 +115,6 @@ const GiangVienLayout = () => {
         <div className="p-4 sm:ml-64">
 
           <div className="flex justify-end items-center gap-4 px-4 py-2 mt-5 mb-5 bg-white ">
-            <button className="relative text-gray-600 hover:text-gray-800">
-              <FaRegBell className="w-6 h-6" />
-              <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full" />
-            </button>
 
             <UserDropdown />
 

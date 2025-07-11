@@ -32,10 +32,6 @@ const VanPhongKhoaLayout = () => {
     <>
       <div>
 
-        <button type="button" className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-          <span className="sr-only">Open sidebar</span>
-        </button>
-
         <aside id="sidebar-multi-level-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
           <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
             <ul className="space-y-2 font-medium">
@@ -141,9 +137,23 @@ const VanPhongKhoaLayout = () => {
                   </li>
 
                   <li>
+                    <NavLink to="/vanphongkhoa/doan/svddk" className={navItemClass}>
+                      <FaChalkboardTeacher className="ml-8 w-6 h-6" />
+                      <span className="ms-3 whitespace-normal break-words leading-snug text-left">Quản lý sinh viên đủ điều kiện</span>
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink to="/vanphongkhoa/doan/gvhdtg" className={navItemClass}>
+                      <FaChalkboardTeacher className="ml-8 w-6 h-6" />
+                      <span className="ms-3 whitespace-normal break-words leading-snug text-left">Quản lý giảng viên hướng dẫn</span>
+                    </NavLink>
+                  </li>
+
+                  <li>
                     <NavLink to="/vanphongkhoa/doan/hodong" className={navItemClass}>
                       <PiGavel className="ml-8 w-5 h-5" />
-                      <span className="ms-3 whitespace-nowrap">Hội đồng chấm</span>
+                      <span className="ms-3 whitespace-nowrap">Duyệt hội đồng</span>
                     </NavLink>
                   </li>
 
@@ -154,20 +164,8 @@ const VanPhongKhoaLayout = () => {
                     </NavLink>
                   </li>
 
-                  <li>
-                    <NavLink to="/vanphongkhoa/doan/svddk" className={navItemClass}>
-                      <FaChalkboardTeacher className="ml-8 w-5 h-5" />
-                      <span className="ms-3 whitespace-nowrap">DS SV đủ điều kiện</span>
-                    </NavLink>
-                  </li>
+                  
                 </ul>
-              </li>
-
-              <li>
-                <NavLink to="/vanphongkhoa/thongke" className={navItemClass}>
-                  <HiOutlineChartBar className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Thống kê</span>
-                </NavLink>
               </li>
 
             </ul>
@@ -177,10 +175,6 @@ const VanPhongKhoaLayout = () => {
         <div className="p-4 sm:ml-64">
 
           <div className="flex justify-end items-center gap-4 px-4 py-2 mt-5 mb-5 bg-white ">
-            <button className="relative text-gray-600 hover:text-gray-800">
-              <FaRegBell className="w-6 h-6" />
-              <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full" />
-            </button>
 
             <UserDropdown/>
 

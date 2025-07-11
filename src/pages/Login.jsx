@@ -1,7 +1,8 @@
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import FailMessage from "../components/common/FailMessage";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -9,6 +10,14 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState(localStorage.getItem("email") || "");
+  const [failMessage, setFailMessage] = useState("");
+
+  useEffect(() => {
+    if (failMessage) {
+      const timeout = setTimeout(() => setFailMessage(""), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [failMessage]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -46,17 +55,16 @@ const Login = () => {
 
     } catch (error) {
       console.error("Login failed", error);
-      alert("Đăng nhập thất bại.");
+      setFailMessage("Lỗi khi đăng nhập: " + (error.response?.data?.message || ""));
     } finally {
       setLoading(false);
     }
   };
 
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 to-purple-600">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 to-purple-600 ">
       <div className="w-full max-w-4xl bg-white shadow-lg rounded-2xl flex overflow-hidden">
-        {/* Bên trái */}
+        
         <div className="w-1/2 bg-gradient-to-br from-blue-400 to-purple-600 text-white flex flex-col justify-center items-center p-8">
           <h1 className="text-5xl font-bold mb-4">iTLU</h1>
           <p className="text-center mb-20">
@@ -64,7 +72,7 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Bên phải */}
+        
         <div className="w-1/2 bg-white p-10">
           <h2 className="text-2xl font-bold text-gray-700 mb-6">Đăng nhập</h2>
           <form className="flex flex-col space-y-4" onSubmit={handleLogin}>
@@ -80,7 +88,7 @@ const Login = () => {
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-3 pr-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -101,6 +109,8 @@ const Login = () => {
             >
               {loading ? "Đang đăng nhập..." : "Đăng nhập"}
             </button>
+
+            {failMessage && <FailMessage message={failMessage} />}
           </form>
         </div>
       </div>

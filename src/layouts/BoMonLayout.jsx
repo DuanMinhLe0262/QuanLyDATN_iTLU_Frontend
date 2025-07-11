@@ -1,6 +1,6 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { LuLayoutDashboard } from "react-icons/lu";
-import { FaRegBell } from "react-icons/fa";
+import UserDropdown from "../components/common/UserDropdown";
 import { FaUserCircle } from "react-icons/fa";
 import { FaRegLightbulb } from "react-icons/fa6";
 import { FaChalkboardTeacher } from "react-icons/fa";
@@ -38,9 +38,9 @@ const BoMonLayout = () => {
               </li>
 
               <li>
-                <NavLink to="/bomon/dexuathoidong" className={navItemClass}>
-                  <FaRegLightbulb className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Đề xuất hội đồng</span>
+                <NavLink to="/bomon/phanconggiangvien" className={navItemClass}>
+                  <TbReport className="w-5 h-5" />
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Phân công giảng viên</span>
                 </NavLink>
               </li>
 
@@ -52,33 +52,19 @@ const BoMonLayout = () => {
               </li>
 
               <li>
-                <NavLink to="/bomon/phanbohoidong" className={navItemClass}>
-                  <TbReport className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Phân bổ hội đồng</span>
+                <NavLink to="/bomon/dexuathoidong" className={navItemClass}>
+                  <FaRegLightbulb className="w-5 h-5" />
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Đề xuất hội đồng</span>
                 </NavLink>
               </li>
 
               <li>
-                <NavLink to="/bomon/phanconggiangvien" className={navItemClass}>
+                <NavLink to="/bomon/phanbosinhvien" className={navItemClass}>
                   <TbReport className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Phân công giảng viên</span>
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Phân bổ sinh viên</span>
                 </NavLink>
               </li>
 
-              <li>
-                <NavLink to="/bomon/detaigoiy" className={navItemClass}>
-                  <TbReport className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Đề tài gợi ý</span>
-                </NavLink>
-              </li>
-
-              <li>
-                <NavLink to="/bomon/giangviengoiy" className={navItemClass}>
-                  <TbReport className="w-5 h-5" />
-                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Giảng viên gợi ý</span>
-                </NavLink>
-              </li>
-              
             </ul>
           </div>
         </aside>
@@ -86,15 +72,8 @@ const BoMonLayout = () => {
         <div className="p-4 sm:ml-64">
 
           <div className="flex justify-end items-center gap-4 px-4 py-2 mt-5 mb-5 bg-white ">
-            <button className="relative text-gray-600 hover:text-gray-800">
-              <FaRegBell className="w-6 h-6" />
-              <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full" />
-            </button>
 
-            <button className="flex items-center gap-4">
-              <FaUserCircle className="w-6 h-6 text-gray-600 hover:text-gray-800" />
-              <span>Duan</span>
-            </button>
+            <UserDropdown />
 
           </div>
 

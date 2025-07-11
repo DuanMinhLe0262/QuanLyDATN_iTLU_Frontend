@@ -1,130 +1,121 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { IoAddOutline } from "react-icons/io5";
+
+import HoiDongForm from "../components/DeXuatHoiDong/HoiDongForm";
+import HoiDongTable from "../components/DeXuatHoiDong/HoiDongTable";
+import SuccessMessage from "../../../components/common/SuccessMessage";
+import FailMessage from "../../../components/common/FailMessage";
+import hoiDongService from "../../../service/HoiDongService";
 
 const DeXuatHoiDong = () => {
-  const [deTais] = useState([
-    { id: 1, ten: "Xây dựng hệ thống quản lý đồ án tốt nghiệp" },
-    { id: 2, ten: "Ứng dụng AI trong xử lý ảnh y tế" },
-  ]);
-
-  const [giangViens] = useState([
-    { id: 1, ten: "TS. Nguyễn Văn A" },
-    { id: 2, ten: "TS. Trần Thị B" },
-    { id: 3, ten: "ThS. Lê Văn C" },
-    { id: 4, ten: "PGS. TS. Phạm Văn D" },
-  ]);
-
-  const [form, setForm] = useState({
-    deTaiId: "",
-    chuTich: "",
-    phanBien: "",
-    uyVien: "",
+  const [hoiDongList, setHoiDongList] = useState([]);
+  const [hoiDong, setHoiDong] = useState({
+    tenHoiDong: "",
+    chuTichId: "",
+    thuKyId: "",
+    uyVien1Id: "",
+    uyVien2Id: "",
+    uyVien3Id: "",
   });
+  const [showForm, setShowForm] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [failMessage, setFailMessage] = useState("");
+
+  useEffect(() => {
+    getAllHoiDong();
+  }, []);
+
+  const getAllHoiDong = async () => {
+    try {
+      const res = await hoiDongService.getAllHoiDongDetail();
+      setHoiDongList(res.data.result);
+      console.log("debug: ", res.data.result);
+    } catch (err) {
+      console.error("Lỗi khi lấy danh sách:", err);
+      setFailMessage("Lỗi khi lấy danh sách hội đồng: " + (err.response?.data?.message || ""));
+    }
+  };
+
+  useEffect(() => {
+    if (successMessage) {
+      const timeout = setTimeout(() => setSuccessMessage(""), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [successMessage]);
+
+  useEffect(() => {
+    if (failMessage) {
+      const timeout = setTimeout(() => setFailMessage(""), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [failMessage]);
+
+  const handleAddClick = () => {
+    setHoiDong({
+      tenHoiDong: "",
+      chuTichId: "",
+      thuKyId: "",
+      uyVien1Id: "",
+      uyVien2Id: "",
+      uyVien3Id: "",
+    });
+    setIsEdit(false);
+    setShowForm(true);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({
+    setHoiDong((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Gửi đề xuất về backend
-    console.log("Đề xuất hội đồng:", form);
-    alert("✅ Đã gửi đề xuất hội đồng chấm!");
-    setForm({
-      deTaiId: "",
-      chuTich: "",
-      phanBien: "",
-      uyVien: "",
-    });
+    try {
+      await hoiDongService.createHoiDongVaHDGV(hoiDong);
+      setSuccessMessage("Thêm hội đồng mới thành công");
+      setShowForm(false);
+      getAllHoiDong();
+    } catch (err) {
+      setShowForm(false);
+      setFailMessage("Lỗi khi thêm hội đồng: " + (err.response?.data?.message || ""));
+      console.error("Lỗi khi thêm hội đồng:", err);
+    }
   };
 
+  // Tính danh sách giảng viên đang bận
+  const busyGiangVienIds = hoiDongList
+    .filter(hd => hd.trangThai === "CHO_DUYET" || hd.trangThai === "DA_DUYET")
+    .flatMap(hd => hd.danhSachGiangVien.map(gv => gv.giangVien.id));
+
   return (
-    <div className="max-w-3xl mx-auto bg-white shadow p-6 mt-10 rounded-lg">
-      <h1 className="text-2xl font-bold mb-6">Đề Xuất Hội Đồng Chấm</h1>
+    <div className="relative overflow-x-auto p-4">
+      <button
+        onClick={handleAddClick}
+        className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mb-10"
+      >
+        <IoAddOutline className="inline mr-2 mb-0.5 size-5" />
+        Thêm hội đồng
+      </button>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label className="block mb-1 font-medium">Chọn đề tài</label>
-          <select
-            name="deTaiId"
-            value={form.deTaiId}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-300 rounded px-4 py-2"
-          >
-            <option value="">-- Chọn đề tài --</option>
-            {deTais.map((dt) => (
-              <option key={dt.id} value={dt.id}>
-                {dt.ten}
-              </option>
-            ))}
-          </select>
-        </div>
+      {successMessage && <SuccessMessage message={successMessage} />}
+      {failMessage && <FailMessage message={failMessage} />}
 
-        <div>
-          <label className="block mb-1 font-medium">Chủ tịch hội đồng</label>
-          <select
-            name="chuTich"
-            value={form.chuTich}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-300 rounded px-4 py-2"
-          >
-            <option value="">-- Chọn giảng viên --</option>
-            {giangViens.map((gv) => (
-              <option key={gv.id} value={gv.id}>
-                {gv.ten}
-              </option>
-            ))}
-          </select>
-        </div>
+      {showForm && (
+        <HoiDongForm
+          hoiDong={hoiDong}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          onCancel={() => setShowForm(false)}
+          isEdit={isEdit}
+          busyGiangVienIds={busyGiangVienIds}
+        />
+      )}
 
-        <div>
-          <label className="block mb-1 font-medium">Phản biện</label>
-          <select
-            name="phanBien"
-            value={form.phanBien}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-300 rounded px-4 py-2"
-          >
-            <option value="">-- Chọn giảng viên --</option>
-            {giangViens.map((gv) => (
-              <option key={gv.id} value={gv.id}>
-                {gv.ten}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block mb-1 font-medium">Ủy viên</label>
-          <select
-            name="uyVien"
-            value={form.uyVien}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-300 rounded px-4 py-2"
-          >
-            <option value="">-- Chọn giảng viên --</option>
-            {giangViens.map((gv) => (
-              <option key={gv.id} value={gv.id}>
-                {gv.ten}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-        >
-          Gửi đề xuất
-        </button>
-      </form>
+      <HoiDongTable hoiDongList={hoiDongList} />
     </div>
   );
 };

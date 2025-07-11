@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import sinhVienHuongDanService from "../../../../service/SinhVienHuongdanService";
+
+import { RiArrowDropDownLine } from "react-icons/ri";
 
 const SinhVienForm = ({ sinhVien, onChange, onSubmit, onCancel, isEdit }) => {
 
@@ -8,85 +8,57 @@ const SinhVienForm = ({ sinhVien, onChange, onSubmit, onCancel, isEdit }) => {
     <div className="fixed inset-0 z-40 flex items-center justify-center">
       <div className="fixed inset-0 bg-gray-600 opacity-10 z-1" />
 
-      <div className="relative w-2/5 h-4/5 bg-white rounded-xl z-50 p-6 overflow-y-auto shadow-lg">
+      <div className="relative w-2/5 h-3/4 bg-white rounded-xl z-50 p-6 overflow-y-auto shadow-lg">
         <form className="max-w-md mx-auto" onSubmit={onSubmit}>
           <h1 className="font-bold text-3xl mb-15 mt-10">
             {isEdit ? "Chỉnh sửa sinh viên" : "Thêm sinh viên hướng dẫn"}
           </h1>
 
-          <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              name="maSinhVien"
-              id="maSinhVien"
-              value={sinhVien.maSinhVien}
-              onChange={onChange}
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
-            />
-            <label
-              htmlFor="maSinhVien"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Mã sinh viên
-            </label>
+          <div>
+            <label htmlFor="maSinhVien" className="block text-sm/6 font-medium text-gray-900">Mã sinh viên</label>
+            <div className="mt-2">
+              <input
+
+                type="text"
+                name="maSinhVien"
+                id="maSinhVien"
+                value={sinhVien.maSinhVien || ""}
+                onChange={onChange}
+                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+            </div>
           </div>
 
-          <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              name="maGiangVien"
-              id="maGiangVien"
-              value={sinhVien.maGiangVien}
-              onChange={onChange}
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
-            />
-            <label
-              htmlFor="maGiangVien"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Mã giảng viên
-            </label>
-          </div>
+          <div className="sm:col-span-3 mt-10">
+            <label htmlFor="vaiTroHuongDan" className="block text-sm/6 font-medium text-gray-900">Vai trò hướng dẫn</label>
+            <div className="mt-2 grid grid-cols-1">
+              <select
 
-          <div className="relative z-0 w-full mb-5 group">
-            <label
-              htmlFor="vaiTroHuongDan"
-              className="block mb-2 text-sm font-medium text-gray-500"
-            >
-              Vai trò hướng dẫn
-            </label>
-            <select
-              id="vaiTroHuongDan"
-              name="vaiTroHuongDan"
-              value={sinhVien.vaiTroHuongDan || ""}
-              onChange={onChange}
-              required
-              className="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5"
-            >
-              <option value="">-- Chọn vai trò --</option>
-              <option value="GVHD_1">GVHD_1</option>
-              <option value="GVHD_2">GVHD_2</option>
-            </select>
+                type="text"
+                name="vaiTroHuongDan"
+                id="vaiTroHuongDan"
+                value={sinhVien.vaiTroHuongDan || ""}
+                onChange={onChange}
+                className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                <option value="">-- Chọn vai trò --</option>
+                <option value={"GVHD_1"}>GVHD 1</option>
+                <option value={"GVHD_2"}>GVHD 2</option>
+              </select>
+              <RiArrowDropDownLine className="w-5 h-5 pointer-events-none col-start-1 row-start-1 mr-2  self-center justify-self-end text-gray-500 sm:size-4" />
+            </div>
           </div>
 
 
-          <div className="flex gap-4 mt-22">
+          <div className="flex flex-row mt-20">
             <button
               type="submit"
-              className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
-            >
+              className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto  px-5 py-2.5 text-center  flex-3 mr-15">
               {isEdit ? "Cập nhật" : "Thêm"}
             </button>
 
             <button
               type="button"
               onClick={() => onCancel(false)}
-              className="text-white bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm px-5 py-2.5"
-            >
+              className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center  flex-3">
               Hủy
             </button>
           </div>

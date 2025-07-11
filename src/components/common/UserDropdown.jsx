@@ -58,7 +58,7 @@ const UserDropdown = () => {
         )}
 
         <span className="text-gray-900">
-          {userInfo?.ten || "Người dùng"}
+          {userInfo?.ten || "Duẩn"}
         </span>
         <RiArrowDropDownLine className="w-5 h-5 text-gray-500" />
       </button>
